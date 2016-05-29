@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">MyLastFM</string>
+    <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
+
+    <!-- Navigation Drawer Header -->
+    <string name="nav_open">Open navigation drawer</string>
+    <string name="nav_close">Close navigation drawer</string>
+    <string name="nav_title">MyLastFM</string>
+    <string name="nav_email">fakeemail@mylastfm.com</string>
+
+    <!-- Navigation Drawer Options -->
+    <string name="nav_browse">Browse</string>
+    <string name="nav_browse_top">Top Track Charts</string>
+    <string name="nav_browse_country">Country Top Chart</string>
+    <string name="nav_search">Search</string>
+    <string name="nav_playlist">My Playlist</string>
+
+    <!-- TrackListFragment -->
+    <string name="track_list_name">TrackListFragment</string>
+
+    <!-- Settings -->
+    <string name="action_settings">Settings</string>
+</resources>
