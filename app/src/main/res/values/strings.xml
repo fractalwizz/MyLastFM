@@ -20,4 +20,6 @@
 
     <!-- Settings -->
     <string name="action_settings">Settings</string>
+    <string name="pref_start_key">pref_startFragment</string>
+    <string name="pref_startScreen">Select Start Screen</string>
 </resources>

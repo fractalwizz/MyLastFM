@@ -1,6 +1,9 @@
 package com.fract.nano.williamyoung.mylastfm;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -48,8 +51,11 @@ public class MainActivity extends AppCompatActivity implements
             .build();
         if (mAdView != null) { mAdView.loadAd(adRequest); }
 
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        int defID = Integer.parseInt(preferences.getString("pref_startFragment", "6"));
+
         FragmentManager fragmentManager = getSupportFragmentManager();
-        Fragment fragment = TrackListFragment.newInstance(6);
+        Fragment fragment = TrackListFragment.newInstance(defID);
 
         fragmentManager.beginTransaction()
             .add(R.id.container, fragment)
@@ -84,6 +90,7 @@ public class MainActivity extends AppCompatActivity implements
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            startActivity(new Intent(this, SettingsActivity.class));
             return true;
         }
 
