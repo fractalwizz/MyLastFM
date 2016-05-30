@@ -1,6 +1,7 @@
 package com.fract.nano.williamyoung.mylastfm;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,17 +13,23 @@ import android.widget.TextView;
 
 public class TrackListFragment extends Fragment {
     private static final String ARG_PARAM1 = "fragID";
+    private static final String ARG_PARAM2 = "queryOne";
+    private static final String ARG_PARAM3 = "queryTwo";
     private int mFragID;
+    private String mQueryOne;
+    private String mQueryTwo;
 
 //    private OnSearchQueryListener mListener;
 
     public TrackListFragment() {}
 
-    public static TrackListFragment newInstance(int param1) {
+    public static TrackListFragment newInstance(int param1, String param2, String param3) {
         TrackListFragment fragment = new TrackListFragment();
 
         Bundle args = new Bundle();
         args.putInt(ARG_PARAM1, param1);
+        args.putString(ARG_PARAM2, param2);
+        args.putString(ARG_PARAM3, param3);
         fragment.setArguments(args);
 
         return fragment;
@@ -34,6 +41,8 @@ public class TrackListFragment extends Fragment {
 
         if (getArguments() != null) {
             mFragID = getArguments().getInt(ARG_PARAM1);
+            mQueryOne = getArguments().getString(ARG_PARAM2);
+            mQueryTwo = getArguments().getString(ARG_PARAM3);
         }
     }
 
@@ -46,6 +55,21 @@ public class TrackListFragment extends Fragment {
         textView.setText(text);
 
         return view;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        updateTrack();
+
+        super.onActivityCreated(savedInstanceState);
+    }
+
+    private void updateTrack() {
+        Intent trackIntent = new Intent(getActivity(), TrackService.class);
+        trackIntent.putExtra(TrackService.FRAG_ID, mFragID);
+        trackIntent.putExtra(TrackService.QUERY_ONE, mQueryOne);
+        trackIntent.putExtra(TrackService.QUERY_TWO, mQueryTwo);
+        getActivity().startService(trackIntent);
     }
 
 //    // T0DO: Rename method, update argument and hook method into UI event
