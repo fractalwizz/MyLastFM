@@ -1,23 +1,33 @@
 package com.fract.nano.williamyoung.mylastfm;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.os.ResultReceiver;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 public class TrackListFragment extends Fragment {
     private static final String ARG_PARAM1 = "fragID";
     private static final String ARG_PARAM2 = "queryOne";
     private static final String ARG_PARAM3 = "queryTwo";
+    public static final String RESULT_VALUE = "resultValue";
     private int mFragID;
     private String mQueryOne;
     private String mQueryTwo;
+    private ArrayList<Track> mTrackList;
+
+    public TrackReceiver trackReceiver;
 
 //    private OnSearchQueryListener mListener;
 
@@ -44,6 +54,24 @@ public class TrackListFragment extends Fragment {
             mQueryOne = getArguments().getString(ARG_PARAM2);
             mQueryTwo = getArguments().getString(ARG_PARAM3);
         }
+
+        setupServiceReceiver();
+    }
+
+    public void setupServiceReceiver() {
+        trackReceiver = new TrackReceiver(new Handler());
+        trackReceiver.setReceiver(new TrackReceiver.Receiver(){
+            @Override
+            public void onReceiveResult(int resultCode, Bundle resultData) {
+                if (resultCode == Activity.RESULT_OK) {
+                    mTrackList = resultData.getParcelableArrayList(RESULT_VALUE);
+
+                    if (mTrackList != null && mTrackList.size() > 0) {
+                        Log.w("setupSR", "Successfully acquired ArrayList of tracks: " + String.valueOf(mTrackList.size()));
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -66,6 +94,7 @@ public class TrackListFragment extends Fragment {
 
     private void updateTrack() {
         Intent trackIntent = new Intent(getActivity(), TrackService.class);
+        trackIntent.putExtra(TrackService.RECEIVER, trackReceiver);
         trackIntent.putExtra(TrackService.FRAG_ID, mFragID);
         trackIntent.putExtra(TrackService.QUERY_ONE, mQueryOne);
         trackIntent.putExtra(TrackService.QUERY_TWO, mQueryTwo);
