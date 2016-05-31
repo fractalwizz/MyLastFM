@@ -60,7 +60,7 @@ public class Track implements Parcelable {
 
     public String getImage() { return image; }
 
-    public void setImage(String imageUrl) { this.image = image; }
+    public void setImage(String imageUrl) { this.image = imageUrl; }
 
     public String getAlbumCover() { return albumCover; }
 

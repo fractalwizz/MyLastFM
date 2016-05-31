@@ -9,11 +9,14 @@ import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.os.ResultReceiver;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -22,10 +25,13 @@ public class TrackListFragment extends Fragment {
     private static final String ARG_PARAM2 = "queryOne";
     private static final String ARG_PARAM3 = "queryTwo";
     public static final String RESULT_VALUE = "resultValue";
+
     private int mFragID;
     private String mQueryOne;
     private String mQueryTwo;
     private ArrayList<Track> mTrackList;
+    private RecyclerView mRecyclerView;
+    private TrackAdapter adapter;
 
     public TrackReceiver trackReceiver;
 
@@ -68,6 +74,15 @@ public class TrackListFragment extends Fragment {
 
                     if (mTrackList != null && mTrackList.size() > 0) {
                         Log.w("setupSR", "Successfully acquired ArrayList of tracks: " + String.valueOf(mTrackList.size()));
+                        adapter = new TrackAdapter(getActivity(), mTrackList);
+                        adapter.setOnItemClickListener(new TrackAdapter.ClickListener() {
+                            @Override
+                            public void onItemClick(int position, View v) {
+                                Track track = mTrackList.get(position);
+                                Toast.makeText(getActivity(), track.getTrackName(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                        mRecyclerView.setAdapter(adapter);
                     }
                 }
             }
@@ -78,9 +93,10 @@ public class TrackListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_track_list, container, false);
 
-        String text = getResources().getText(R.string.track_list_name) + ":" + String.valueOf(mFragID);
-        TextView textView = (TextView) view.findViewById(R.id.track_list_text);
-        textView.setText(text);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerview);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
+        //
 
         return view;
     }
