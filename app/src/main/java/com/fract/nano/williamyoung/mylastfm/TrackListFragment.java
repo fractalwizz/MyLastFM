@@ -1,26 +1,41 @@
 package com.fract.nano.williamyoung.mylastfm;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
+import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.Snackbar;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.os.ResultReceiver;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 
-public class TrackListFragment extends Fragment {
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
+public class TrackListFragment extends Fragment implements
+    GoogleApiClient.ConnectionCallbacks,
+    GoogleApiClient.OnConnectionFailedListener {
+
     private static final String ARG_PARAM1 = "fragID";
     private static final String ARG_PARAM2 = "queryOne";
     private static final String ARG_PARAM3 = "queryTwo";
@@ -29,11 +44,16 @@ public class TrackListFragment extends Fragment {
     private int mFragID;
     private String mQueryOne;
     private String mQueryTwo;
+    private double mLatitude;
+    private double mLongitude;
+
     private ArrayList<Track> mTrackList;
     private RecyclerView mRecyclerView;
     private TrackAdapter adapter;
 
     public TrackReceiver trackReceiver;
+    private LocationRequest mLocationRequest;
+    private GoogleApiClient mGoogleApiClient;
 
 //    private OnSearchQueryListener mListener;
 
@@ -60,6 +80,13 @@ public class TrackListFragment extends Fragment {
             mQueryOne = getArguments().getString(ARG_PARAM2);
             mQueryTwo = getArguments().getString(ARG_PARAM3);
         }
+
+        mLocationRequest = LocationRequest.create();
+        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
+            .addApi(LocationServices.API)
+            .addConnectionCallbacks(this)
+            .addOnConnectionFailedListener(this)
+            .build();
 
         setupServiceReceiver();
     }
@@ -102,8 +129,22 @@ public class TrackListFragment extends Fragment {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        mGoogleApiClient.connect();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.disconnect();
+        }
+    }
+
+    @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        updateTrack();
+        if (mFragID != 1 && mFragID != 6) { updateTrack(); }
 
         super.onActivityCreated(savedInstanceState);
     }
@@ -139,6 +180,46 @@ public class TrackListFragment extends Fragment {
 //        mListener = null;
     }
 
+    @Override
+    public void onConnected(Bundle bundle) {
+        int result = ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION);
+
+        if (mFragID == 1) {
+            if (result != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 0);
+            } else {
+                Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+                mLatitude = location.getLatitude();
+                mLongitude = location.getLongitude();
+
+                new GetLocationTask().execute(mLatitude, mLongitude);
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,@NonNull String[] permissions,@NonNull int[] grantResults) {
+        if (requestCode == 0) {
+            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                int result = ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION);
+
+                if (result == PackageManager.PERMISSION_GRANTED) {
+                    Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+                    mLatitude = location.getLatitude();
+                    mLongitude = location.getLongitude();
+
+                    new GetLocationTask().execute(mLatitude, mLongitude);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {}
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult result) {}
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -152,4 +233,32 @@ public class TrackListFragment extends Fragment {
 //    public interface OnSearchQueryListener {
 //        void onSearchQuery(int fragID, String queryOne, String queryTwo);
 //    }
+
+    public class GetLocationTask extends AsyncTask<Double, Void, String> {
+        @Override
+        protected String doInBackground(Double... params) {
+            if (params.length == 0) { return ""; }
+
+            double lat = params[0];
+            double lon = params[1];
+
+            Geocoder geoCoder = new Geocoder(getActivity(), Locale.getDefault());
+            List<Address> addressList;
+
+            try {
+                addressList = geoCoder.getFromLocation(lat, lon, 1);
+            } catch (IOException e) {
+                Log.e("GetLocation", e.getMessage());
+                return "";
+            }
+
+            return addressList.get(0).getCountryName();
+        }
+
+        @Override
+        public void onPostExecute(String countryName) {
+            mQueryOne = countryName;
+            updateTrack();
+        }
+    }
 }

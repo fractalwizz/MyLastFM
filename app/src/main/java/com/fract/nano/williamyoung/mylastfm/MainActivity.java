@@ -106,19 +106,16 @@ public class MainActivity extends AppCompatActivity implements
 
         switch(id) {
             case R.id.nav_browse:
-//                Snackbar.make(mDrawer, "Browse Selected", Snackbar.LENGTH_LONG).show();
                 nextFragment = TrackListFragment.newInstance(0, "", "");
                 break;
             case R.id.nav_browse_country:
-//                Snackbar.make(mDrawer, "Browse Country Selected", Snackbar.LENGTH_LONG).show();
-                nextFragment = TrackListFragment.newInstance(1, "India", "");
+                nextFragment = TrackListFragment.newInstance(1, "", "");
                 break;
             case R.id.nav_search:
                 Snackbar.make(mDrawer, "Search Layout Selected", Snackbar.LENGTH_LONG).show();
                 //nextFragment = new SearchFragment();
                 break;
             case R.id.nav_playlist:
-//                Snackbar.make(mDrawer, "My Playlist Selected", Snackbar.LENGTH_LONG).show();
                 nextFragment = TrackListFragment.newInstance(6, "", "");
                 break;
             default:
