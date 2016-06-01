@@ -16,4 +16,21 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <!-- Text Styles -->
+    <style name="TrackText" parent="@style/TextAppearance.AppCompat.Subhead">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/MaterialGrey700</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:typeface">sans</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="BandText" parent="@style/TextAppearance.AppCompat.Body1">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/MaterialGrey600</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:typeface">sans</item>
+        <item name="android:ellipsize">end</item>
+    </style>
 </resources>

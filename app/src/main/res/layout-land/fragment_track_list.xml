@@ -1,0 +1,17 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="@dimen/landscape_track_list_width"
+    android:layout_height="match_parent"
+    android:background="@color/MaterialGrey200"
+    android:layout_gravity="center_horizontal"
+    tools:context="com.fract.nano.williamyoung.mylastfm.TrackListFragment" >
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:paddingStart="@dimen/list_item_padding"
+        android:paddingEnd="@dimen/list_item_padding"
+        android:background="@android:color/white"/>
+</FrameLayout>

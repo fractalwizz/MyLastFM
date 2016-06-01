@@ -17,6 +17,7 @@
 
     <!-- TrackListFragment -->
     <string name="track_list_name">TrackListFragment</string>
+    <string name="empty"> </string>
 
     <!-- Settings -->
     <string name="action_settings">Settings</string>

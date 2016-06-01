@@ -57,12 +57,17 @@ public class MainActivity extends AppCompatActivity implements
         int defID = Integer.parseInt(preferences.getString("pref_startFragment", "6"));
 
         FragmentManager fragmentManager = getSupportFragmentManager();
-        Fragment fragment = TrackListFragment.newInstance(defID, "", "");
+        Fragment fragment = fragmentManager.findFragmentById(R.id.container);
 
-        // Insert Fragment into layout
-        fragmentManager.beginTransaction()
-            .add(R.id.container, fragment)
-            .commit();
+        // Is there no fragment present?
+        if (fragment == null) {
+            fragment = TrackListFragment.newInstance(defID, "", "");
+
+            // Insert Fragment into layout
+            fragmentManager.beginTransaction()
+                .add(R.id.container, fragment)
+                .commit();
+        }
 
         mNavigation = (NavigationView) findViewById(R.id.nav_view);
         if (mNavigation != null) { mNavigation.setNavigationItemSelectedListener(this); }

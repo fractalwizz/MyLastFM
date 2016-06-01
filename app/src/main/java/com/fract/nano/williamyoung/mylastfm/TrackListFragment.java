@@ -44,6 +44,7 @@ public class TrackListFragment extends Fragment implements
     private static final String ARG_PARAM2 = "queryOne";
     private static final String ARG_PARAM3 = "queryTwo";
     public static final String RESULT_VALUE = "resultValue";
+    private static final String TRACK_LIST = "track_list";
 
     private int mFragID;
     private String mQueryOne;
@@ -102,11 +103,27 @@ public class TrackListFragment extends Fragment implements
         setupServiceReceiver();
     }
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_track_list, container, false);
+
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerview);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
+
+        if (savedInstanceState != null && savedInstanceState.containsKey(TRACK_LIST)) {
+            mTrackList = savedInstanceState.getParcelableArrayList(TRACK_LIST);
+            setupAdapter();
+        }
+
+        return view;
+    }
+
     /**
      * Creates and sets a ServiceReceiver for acquiring the ArrayList of track objects
      * Receiver includes setting up the TrackAdapter + RecyclerView item selection
      */
-    public void setupServiceReceiver() {
+    private void setupServiceReceiver() {
         trackReceiver = new TrackReceiver(new Handler());
         trackReceiver.setReceiver(new TrackReceiver.Receiver(){
             @Override
@@ -116,36 +133,35 @@ public class TrackListFragment extends Fragment implements
 
                     if (mTrackList != null && mTrackList.size() > 0) {
                         Log.w("setupSR", "Successfully acquired ArrayList of tracks: " + String.valueOf(mTrackList.size()));
-                        adapter = new TrackAdapter(getActivity(), mTrackList);
-                        adapter.setOnItemClickListener(new TrackAdapter.ClickListener() {
-
-                            /**
-                             * Individual RecyclerView item selected
-                             * @param position : item selected index
-                             * @param v : view contained within the RecyclerView List
-                             */
-                            @Override
-                            public void onItemClick(int position, View v) {
-                                Track track = mTrackList.get(position);
-                                Toast.makeText(getActivity(), track.getTrackName(), Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                        mRecyclerView.setAdapter(adapter);
+                        setupAdapter();
                     }
                 }
             }
         });
     }
 
+    private void setupAdapter() {
+        adapter = new TrackAdapter(getActivity(), mTrackList);
+        adapter.setOnItemClickListener(new TrackAdapter.ClickListener() {
+
+            /**
+             * Individual RecyclerView item selected
+             * @param position : item selected index
+             * @param v : view contained within the RecyclerView List
+             */
+            @Override
+            public void onItemClick(int position, View v) {
+                Track track = mTrackList.get(position);
+                Toast.makeText(getActivity(), track.getTrackName(), Toast.LENGTH_SHORT).show();
+            }
+        });
+        mRecyclerView.setAdapter(adapter);
+    }
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_track_list, container, false);
-
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerview);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
-
-        return view;
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelableArrayList(TRACK_LIST, mTrackList);
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -165,7 +181,7 @@ public class TrackListFragment extends Fragment implements
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         // Don't immediately updateTrack if GEO info needed or data from ContentProvider
-        if (mFragID != 1 && mFragID != 6) { updateTrack(); }
+        if (mFragID != 1 && mFragID != 6 && mTrackList == null) { updateTrack(); }
 
         super.onActivityCreated(savedInstanceState);
     }
@@ -304,7 +320,7 @@ public class TrackListFragment extends Fragment implements
         @Override
         public void onPostExecute(String countryName) {
             mQueryOne = countryName;
-            updateTrack();
+            if (mTrackList == null) { updateTrack(); }
         }
     }
 }
