@@ -3,7 +3,6 @@ package com.fract.nano.williamyoung.mylastfm;
 import android.app.Activity;
 import android.app.IntentService;
 import android.content.Intent;
-import android.database.CursorJoiner;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.os.ResultReceiver;
@@ -21,6 +20,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
+/**
+ * Handles acquiring JSON data from Last.FM API
+ */
 public class TrackService extends IntentService {
     private final String LOG_TAG = TrackService.class.getSimpleName();
 
@@ -37,6 +39,10 @@ public class TrackService extends IntentService {
 
     public TrackService() { super("MyLastFM"); }
 
+    /**
+     * Captures intent from TrackListFragment to begin Service
+     * @param intent : container of extras
+     */
     @Override
     protected void onHandleIntent(Intent intent) {
         receiver = intent.getParcelableExtra(RECEIVER);
@@ -44,10 +50,12 @@ public class TrackService extends IntentService {
         queryOne = intent.getStringExtra(QUERY_ONE);
         queryTwo = intent.getStringExtra(QUERY_TWO);
 
-        if (fragID == 6) { return; }
         fetchTrackList();
     }
 
+    /**
+     * Builds the API URL and fetches JSON response
+     */
     private void fetchTrackList() {
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
@@ -56,6 +64,7 @@ public class TrackService extends IntentService {
         String apiKey = Utility.getAPIKey(getApplicationContext());
         String format = "json";
 
+        // 6 method variant API calls
         String chartTop = "chart.gettoptracks";
         String geoTop = "geo.gettoptracks";
         String tagTop = "tag.gettoptracks";
@@ -77,14 +86,14 @@ public class TrackService extends IntentService {
             Uri builtUri = null;
 
             switch(fragID) {
-                case 0:
+                case 0:                                                 // Top Chart Tracks
                     builtUri = Uri.parse(TRACK_BASE_URL).buildUpon()
                         .appendQueryParameter(METHOD_PARAM, chartTop)
                         .appendQueryParameter(KEY_PARAM, apiKey)
                         .appendQueryParameter(FORMAT_PARAM, format)
                         .build();
                     break;
-                case 1:
+                case 1:                                                 // Country Top Chart Tracks
                     builtUri = Uri.parse(TRACK_BASE_URL).buildUpon()
                         .appendQueryParameter(METHOD_PARAM, geoTop)
                         .appendQueryParameter(COUNTRY_PARAM, queryOne)
@@ -92,7 +101,7 @@ public class TrackService extends IntentService {
                         .appendQueryParameter(FORMAT_PARAM, format)
                         .build();
                     break;
-                case 2:
+                case 2:                                                 // Search by Tag
                     builtUri = Uri.parse(TRACK_BASE_URL).buildUpon()
                         .appendQueryParameter(METHOD_PARAM, tagTop)
                         .appendQueryParameter(TAG_PARAM, queryOne)
@@ -100,7 +109,7 @@ public class TrackService extends IntentService {
                         .appendQueryParameter(FORMAT_PARAM, format)
                         .build();
                     break;
-                case 3:
+                case 3:                                                 // Search by Artist
                     builtUri = Uri.parse(TRACK_BASE_URL).buildUpon()
                         .appendQueryParameter(METHOD_PARAM, artistTop)
                         .appendQueryParameter(ARTIST_PARAM, queryOne)
@@ -108,7 +117,7 @@ public class TrackService extends IntentService {
                         .appendQueryParameter(FORMAT_PARAM, format)
                         .build();
                     break;
-                case 4:
+                case 4:                                                 // Search by Track
                     builtUri = Uri.parse(TRACK_BASE_URL).buildUpon()
                         .appendQueryParameter(METHOD_PARAM, trackSearch)
                         .appendQueryParameter(TRACK_PARAM, queryOne)
@@ -116,7 +125,7 @@ public class TrackService extends IntentService {
                         .appendQueryParameter(FORMAT_PARAM, format)
                         .build();
                     break;
-                case 5:
+                case 5:                                                 // Search by Artist/Album
                     builtUri = Uri.parse(TRACK_BASE_URL).buildUpon()
                         .appendQueryParameter(METHOD_PARAM, albumInfo)
                         .appendQueryParameter(ARTIST_PARAM, queryOne)
@@ -159,14 +168,34 @@ public class TrackService extends IntentService {
             }
         }
 
+        // API results vary
+        // JSON parsing segregation necessary
         try {
-            getTrackDataFromJson(trackJsonStr);
+            switch(fragID) {
+                case 0:
+                case 1:
+                case 2:
+                case 3:
+                    getTrackDataFromJson(trackJsonStr);
+                    break;
+                case 4:
+                    getTrackSearchFromJson(trackJsonStr);
+                    break;
+                case 5:
+                    getAlbumTracksFromJson(trackJsonStr);
+                    break;
+            }
         } catch (JSONException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
             e.printStackTrace();
         }
     }
 
+    /**
+     * Extracts track data from a list of tracks
+     * @param listJsonStr : JSON response string from API calls
+     * @throws JSONException
+     */
     private void getTrackDataFromJson(String listJsonStr) throws JSONException {
         final String OWM_TRACKS = "tracks";
         final String OWM_LIST = "track";
@@ -206,15 +235,26 @@ public class TrackService extends IntentService {
             resultTrack.add(track);
         }
 
+        // return ArrayList of tracks to Fragment
         Bundle bundle = new Bundle();
         bundle.putParcelableArrayList(RESULT_VALUE, resultTrack);
         receiver.send(Activity.RESULT_OK, bundle);
     }
 
+    /**
+     * Extracts track information from a track search
+     * @param trackJsonStr : JSON response string from API calls
+     * @throws JSONException
+     */
     private void getTrackSearchFromJson(String trackJsonStr) throws JSONException {
 
     }
 
+    /**
+     * Extracts track information from an album info result
+     * @param trackJsonStr : JSON response string from API calls
+     * @throws JSONException
+     */
     private void getAlbumTracksFromJson(String trackJsonStr) throws JSONException {
 
     }

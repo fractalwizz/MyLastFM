@@ -18,11 +18,20 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.TrackViewHol
     private Context mContext;
     private ClickListener listener;
 
+    /**
+     * Constructor without initializing ArrayList
+     * @param context : Activity/Fragment context
+     */
     public TrackAdapter(Context context) {
         this.mTrackList = null;
         this.mContext = context;
     }
 
+    /**
+     * Constructor with ArrayList included
+     * @param context : Activity/Fragment context
+     * @param trackList : ArrayList of Track objects
+     */
     public TrackAdapter(Context context, ArrayList<Track> trackList) {
         this.mTrackList = trackList;
         this.mContext = context;
@@ -59,6 +68,10 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.TrackViewHol
         return (null != mTrackList) ? mTrackList.size() : 0;
     }
 
+    /**
+     * Used within TrackListFragment
+     * Detects RecyclerView item click
+     */
     public interface ClickListener {
         void onItemClick(int position, View v);
     }

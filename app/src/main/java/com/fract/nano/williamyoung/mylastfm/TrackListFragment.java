@@ -32,6 +32,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * Fragment containing a RecyclerView for displaying a List of Track objects
+ * Supports Results from 6 different API calls, as well as from a Content Provider
+ */
 public class TrackListFragment extends Fragment implements
     GoogleApiClient.ConnectionCallbacks,
     GoogleApiClient.OnConnectionFailedListener {
@@ -59,6 +63,13 @@ public class TrackListFragment extends Fragment implements
 
     public TrackListFragment() {}
 
+    /**
+     * Creates Factory instance of a TrackListFragment
+     * @param param1 : Fragment ID
+     * @param param2 : Query String 1
+     * @param param3 : Query String 2
+     * @return new TrackListFragment
+     */
     public static TrackListFragment newInstance(int param1, String param2, String param3) {
         TrackListFragment fragment = new TrackListFragment();
 
@@ -91,6 +102,10 @@ public class TrackListFragment extends Fragment implements
         setupServiceReceiver();
     }
 
+    /**
+     * Creates and sets a ServiceReceiver for acquiring the ArrayList of track objects
+     * Receiver includes setting up the TrackAdapter + RecyclerView item selection
+     */
     public void setupServiceReceiver() {
         trackReceiver = new TrackReceiver(new Handler());
         trackReceiver.setReceiver(new TrackReceiver.Receiver(){
@@ -103,6 +118,12 @@ public class TrackListFragment extends Fragment implements
                         Log.w("setupSR", "Successfully acquired ArrayList of tracks: " + String.valueOf(mTrackList.size()));
                         adapter = new TrackAdapter(getActivity(), mTrackList);
                         adapter.setOnItemClickListener(new TrackAdapter.ClickListener() {
+
+                            /**
+                             * Individual RecyclerView item selected
+                             * @param position : item selected index
+                             * @param v : view contained within the RecyclerView List
+                             */
                             @Override
                             public void onItemClick(int position, View v) {
                                 Track track = mTrackList.get(position);
@@ -123,7 +144,6 @@ public class TrackListFragment extends Fragment implements
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerview);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
-        //
 
         return view;
     }
@@ -144,11 +164,16 @@ public class TrackListFragment extends Fragment implements
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
+        // Don't immediately updateTrack if GEO info needed or data from ContentProvider
         if (mFragID != 1 && mFragID != 6) { updateTrack(); }
 
         super.onActivityCreated(savedInstanceState);
     }
 
+    /**
+     * Creates intent to pass API data to the TrackService.
+     * Passes a TrackReceiver, fragment ID, and two Query Strings
+     */
     private void updateTrack() {
         Intent trackIntent = new Intent(getActivity(), TrackService.class);
         trackIntent.putExtra(TrackService.RECEIVER, trackReceiver);
@@ -180,6 +205,13 @@ public class TrackListFragment extends Fragment implements
 //        mListener = null;
     }
 
+    // Assistance from http://sanastasov.blogspot.com/2014/12/migrating-from-locationclient-to.html
+
+    /**
+     * Used with GoogleApiClient to get GEO location data
+     * from FusedLocationApi for GEO Browse track list
+     * @param bundle : bundle
+     */
     @Override
     public void onConnected(Bundle bundle) {
         int result = ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION);
@@ -197,6 +229,12 @@ public class TrackListFragment extends Fragment implements
         }
     }
 
+    /**
+     * Callback for instance if permissions were denied + requested
+     * @param requestCode : code used within requestPermissions (onConnected)
+     * @param permissions : array of permissions requested
+     * @param grantResults : int results of permission granted/denied
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode,@NonNull String[] permissions,@NonNull int[] grantResults) {
         if (requestCode == 0) {
@@ -234,6 +272,9 @@ public class TrackListFragment extends Fragment implements
 //        void onSearchQuery(int fragID, String queryOne, String queryTwo);
 //    }
 
+    /**
+     * AsyncTask used to acquire country name using location coordinates
+     */
     public class GetLocationTask extends AsyncTask<Double, Void, String> {
         @Override
         protected String doInBackground(Double... params) {
@@ -255,6 +296,11 @@ public class TrackListFragment extends Fragment implements
             return addressList.get(0).getCountryName();
         }
 
+        /**
+         * Sets up Query 1 string with GEO data
+         * Initiates Track List fetch
+         * @param countryName : Country Name string result
+         */
         @Override
         public void onPostExecute(String countryName) {
             mQueryOne = countryName;

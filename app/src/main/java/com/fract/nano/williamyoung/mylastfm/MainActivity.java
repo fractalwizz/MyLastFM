@@ -45,18 +45,21 @@ public class MainActivity extends AppCompatActivity implements
         if (mDrawer != null) { mDrawer.addDrawerListener(toggle); }
         toggle.syncState();
 
+        // Sets up AdMob View at bottom of MainActivity
         AdView mAdView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder()
             .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
             .build();
         if (mAdView != null) { mAdView.loadAd(adRequest); }
 
+        // Default Fragment to be loaded
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         int defID = Integer.parseInt(preferences.getString("pref_startFragment", "6"));
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment fragment = TrackListFragment.newInstance(defID, "", "");
 
+        // Insert Fragment into layout
         fragmentManager.beginTransaction()
             .add(R.id.container, fragment)
             .commit();
@@ -97,6 +100,12 @@ public class MainActivity extends AppCompatActivity implements
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Handles Navigation Drawer Item Navigation
+     * Selects fragment to replace within container layout
+     * @param item : Drawer item selected
+     * @return : success(?)
+     */
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
@@ -121,6 +130,7 @@ public class MainActivity extends AppCompatActivity implements
             default:
         }
 
+        // replace container layout with fragment
         if (nextFragment != null) {
             fragmentManager.beginTransaction()
                 .replace(R.id.container, nextFragment)
@@ -132,6 +142,16 @@ public class MainActivity extends AppCompatActivity implements
         return true;
     }
 
-//    @Override
-//    public void onSearchQuery(int fragID, String queryOne, String queryTwo) {}
+     /*@Override
+     public void onSearchQuery(int fragID, String queryOne, String queryTwo) {
+         FragmentManager fragmentManager = getSupportFragmentManager();
+         Fragment nextFragment = TrackListFragment.newInstance(fragID, queryOne, queryTwo);
+
+         if (nextFragment != null) {
+             fragmentManager.beginTransaction()
+                 .replace(R.id.container, nextFragment)
+                 .addToBackStack((String) title)
+                 .commit();
+         }
+     }*/
 }

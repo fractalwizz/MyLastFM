@@ -16,6 +16,18 @@ public class Track implements Parcelable {
     private String albumCover;
     private String bandUrl;
 
+    /**
+     * Factory to create new Track object indirectly
+     * @param artist : Artist Name String
+     * @param album : Album Name String
+     * @param trackName : Track Name String
+     * @param year : Year of Release int
+     * @param length : Duration of Track int
+     * @param image : Image URL
+     * @param albumCover : Album Cover Image URL
+     * @param bandUrl : Last.FM Band URL
+     * @return new initialized Track
+     */
     public static Track newInstance(String artist, String album, String trackName, int year, int length, String image, String albumCover, String bandUrl) {
         Track track = new Track();
 
@@ -51,6 +63,10 @@ public class Track implements Parcelable {
 
     public void setLength(int length) { this.length = length; }
 
+    /**
+     * Formats track object duration
+     * @return : Track Duration in Min:Sec format
+     */
     public String getFormattedLength() {
         return String.format(Locale.US, "%02d:%02d",
             TimeUnit.MILLISECONDS.toMinutes(length),
@@ -74,14 +90,14 @@ public class Track implements Parcelable {
         @Override
         public Track createFromParcel(Parcel source) {
             return Track.newInstance(
-                source.readString(),
-                source.readString(),
-                source.readString(),
-                source.readInt(),
-                source.readInt(),
-                source.readString(),
-                source.readString(),
-                source.readString()
+                source.readString(), // Artist Name
+                source.readString(), // Album Name
+                source.readString(), // Track Name
+                source.readInt(),    // Year of Release
+                source.readInt(),    // Track Duration
+                source.readString(), // Image URL
+                source.readString(), // Album Cover Image URL
+                source.readString()  // Last.FM Band URL
             );
         }
 
@@ -102,6 +118,11 @@ public class Track implements Parcelable {
         parcel.writeString(bandUrl);
     }
 
+    /**
+     * Compares track equality based on Artist Name, Album Name, and Track Name
+     * @param track : Track object to be compared with
+     * @return : Equality of track object to other track object
+     */
     @Override
     public boolean equals(Object track) {
         boolean retVal = false;
