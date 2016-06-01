@@ -137,6 +137,7 @@ public class TrackService extends IntentService {
             }
 
             URL url = new URL(builtUri.toString());
+            Log.w("TrackService", builtUri.toString());
 
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("GET");
@@ -175,8 +176,10 @@ public class TrackService extends IntentService {
                 case 0:
                 case 1:
                 case 2:
+                    getTrackDataFromJson(trackJsonStr, false);
+                    break;
                 case 3:
-                    getTrackDataFromJson(trackJsonStr);
+                    getTrackDataFromJson(trackJsonStr, true);
                     break;
                 case 4:
                     getTrackSearchFromJson(trackJsonStr);
@@ -194,10 +197,12 @@ public class TrackService extends IntentService {
     /**
      * Extracts track data from a list of tracks
      * @param listJsonStr : JSON response string from API calls
+     * @param top         : toptracks or tracks
      * @throws JSONException
      */
-    private void getTrackDataFromJson(String listJsonStr) throws JSONException {
+    private void getTrackDataFromJson(String listJsonStr, boolean top) throws JSONException {
         final String OWM_TRACKS = "tracks";
+        final String OWM_TOPTRACKS = "toptracks";
         final String OWM_LIST = "track";
         final String OWM_NAME = "name";
         final String OWM_DURATION = "duration";
@@ -208,7 +213,10 @@ public class TrackService extends IntentService {
         final String OWM_IMAGE = "#text";
 
         JSONObject listJson = new JSONObject(listJsonStr);
-        JSONObject skcart = listJson.optJSONObject(OWM_TRACKS);
+        JSONObject skcart = listJson.optJSONObject(top
+            ? OWM_TOPTRACKS
+            : OWM_TRACKS
+        );
         JSONArray trackArray = skcart.getJSONArray(OWM_LIST);
 
         ArrayList<Track> resultTrack = new ArrayList<>();
@@ -217,7 +225,7 @@ public class TrackService extends IntentService {
             JSONObject singleTrack = trackArray.getJSONObject(i);
 
             String trackName = singleTrack.getString(OWM_NAME);
-            int length = singleTrack.getInt(OWM_DURATION);
+            int length = (top) ? 0 : singleTrack.getInt(OWM_DURATION);
 
             JSONObject artistObject = singleTrack.getJSONObject(OWM_ARTIST);
             String artistName = artistObject.getString(OWM_BAND);
@@ -247,7 +255,45 @@ public class TrackService extends IntentService {
      * @throws JSONException
      */
     private void getTrackSearchFromJson(String trackJsonStr) throws JSONException {
+        final String OWM_RESULTS = "results";
+        final String OWM_TRACK_MATCH = "trackmatches";
+        final String OWM_TRACK_ARRAY = "track";
+        final String OWM_NAME = "name";
+        final String OWM_ARTIST = "artist";
+        final String OWM_EGAMI = "image";
+        final String OWM_IMAGE = "#text";
 
+        JSONObject listJson = new JSONObject(trackJsonStr);
+        JSONObject results = listJson.getJSONObject(OWM_RESULTS);
+        JSONObject matches = results.getJSONObject(OWM_TRACK_MATCH);
+        JSONArray trackArray = matches.getJSONArray(OWM_TRACK_ARRAY);
+
+        ArrayList<Track> resultTrack = new ArrayList<>();
+
+        for (int i = 0; i < trackArray.length(); i++) {
+            JSONObject singleTrack = trackArray.getJSONObject(i);
+
+            String trackName = singleTrack.getString(OWM_NAME);
+            String artistName = singleTrack.getString(OWM_ARTIST);
+            String bandURL = Utility.getBandURL(artistName);
+
+            JSONArray imageArray = singleTrack.getJSONArray(OWM_EGAMI);
+            JSONObject egamiObject = imageArray.getJSONObject(imageArray.length() - 1);
+            String imageURL = egamiObject.getString(OWM_IMAGE);
+
+            int length = 0;
+            int year = 0;
+            String album = "";
+            String albumCover = "";
+
+            Track track = Track.newInstance(artistName, album, trackName, year, length, imageURL, albumCover, bandURL);
+            resultTrack.add(track);
+        }
+
+        // return ArrayList of tracks to Fragment
+        Bundle bundle = new Bundle();
+        bundle.putParcelableArrayList(RESULT_VALUE, resultTrack);
+        receiver.send(Activity.RESULT_OK, bundle);
     }
 
     /**
@@ -256,6 +302,49 @@ public class TrackService extends IntentService {
      * @throws JSONException
      */
     private void getAlbumTracksFromJson(String trackJsonStr) throws JSONException {
+        final String OWM_RESULT = "album";
+        final String OWM_ALBUM = "name";
+        final String OWM_COVER = "image";
+        final String OWM_COVER_URL = "#text";
+        final String OWM_TRACKS = "tracks";
+        final String OWM_TRACK_ARRAY = "track";
+        final String OWM_NAME = "name";
+        final String OWM_ARTIST = "artist";
+        final String OWM_ARTIST_NAME = "name";
+        final String OWM_URL = "url";
 
+        JSONObject listJson = new JSONObject(trackJsonStr);
+        JSONObject albumResult = listJson.getJSONObject(OWM_RESULT);
+        String albumName = albumResult.getString(OWM_ALBUM);
+
+        JSONArray albumCoverArray = albumResult.getJSONArray(OWM_COVER);
+        JSONObject coverObject = albumCoverArray.getJSONObject(3);
+        String albumCover = coverObject.getString(OWM_COVER_URL);
+
+        JSONObject trackObject = albumResult.getJSONObject(OWM_TRACKS);
+        JSONArray trackArray = trackObject.getJSONArray(OWM_TRACK_ARRAY);
+
+        ArrayList<Track> resultTrack = new ArrayList<>();
+
+        for (int i = 0; i < trackArray.length(); i++) {
+            JSONObject singleTrack = trackArray.getJSONObject(i);
+
+            String trackName = singleTrack.getString(OWM_NAME);
+
+            JSONObject artistObject = singleTrack.getJSONObject(OWM_ARTIST);
+            String artistName = artistObject.getString(OWM_ARTIST_NAME);
+            String bandURL = artistObject.getString(OWM_URL);
+
+            int length = 0;
+            int year = 0;
+
+            Track track = Track.newInstance(artistName, albumName, trackName, year, length, albumCover, albumCover, bandURL);
+            resultTrack.add(track);
+        }
+
+        // return ArrayList of tracks to Fragment
+        Bundle bundle = new Bundle();
+        bundle.putParcelableArrayList(RESULT_VALUE, resultTrack);
+        receiver.send(Activity.RESULT_OK, bundle);
     }
 }

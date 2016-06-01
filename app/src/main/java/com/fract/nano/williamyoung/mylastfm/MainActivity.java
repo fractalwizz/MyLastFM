@@ -132,6 +132,19 @@ public class MainActivity extends AppCompatActivity implements
             case R.id.nav_playlist:
                 nextFragment = TrackListFragment.newInstance(6, "", "");
                 break;
+
+            case R.id.nav_debug_tag:
+                nextFragment = TrackListFragment.newInstance(2, "Death metal", "");
+                break;
+            case R.id.nav_debug_artist:
+                nextFragment = TrackListFragment.newInstance(3, "Fallujah", "");
+                break;
+            case R.id.nav_debug_track:
+                nextFragment = TrackListFragment.newInstance(4, "Ruination", "");
+                break;
+            case R.id.nav_debug_artalb:
+                nextFragment = TrackListFragment.newInstance(5, "Fallujah", "Nomadic");
+                break;
             default:
         }
 

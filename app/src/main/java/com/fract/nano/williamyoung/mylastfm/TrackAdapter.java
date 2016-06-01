@@ -57,11 +57,11 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.TrackViewHol
             .error(R.drawable.error)
             .placeholder(R.drawable.placeholder)
             .into(viewHolder.imageView);
+
+        viewHolder.imageView.setContentDescription(track.getTrackName());
     }
 
-    public void setOnItemClickListener(ClickListener listener) {
-        this.listener = listener;
-    }
+    public void setOnItemClickListener(ClickListener listener) { this.listener = listener; }
 
     @Override
     public int getItemCount() {
@@ -90,8 +90,6 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.TrackViewHol
         }
 
         @Override
-        public void onClick(View v) {
-            listener.onItemClick(getAdapterPosition(), v);
-        }
+        public void onClick(View v) { listener.onItemClick(getAdapterPosition(), v); }
     }
 }

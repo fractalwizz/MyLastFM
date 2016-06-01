@@ -9,4 +9,11 @@ public class Utility {
      * @return API key string
      */
     public static String getAPIKey(Context context) { return context.getString(R.string.apiKey); }
+
+    /**
+     * gets formatted Band Last.FM URL
+     * @param band : Band name
+     * @return : Last.FM URL
+     */
+    public static String getBandURL(String band) { return "http://www.last.fm/music/" + band; }
 }
