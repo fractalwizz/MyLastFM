@@ -2,7 +2,10 @@ package com.fract.nano.williamyoung.mylastfm;
 
 import android.app.Activity;
 import android.app.IntentService;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.os.ResultReceiver;
@@ -50,7 +53,23 @@ public class TrackService extends IntentService {
         queryOne = intent.getStringExtra(QUERY_ONE);
         queryTwo = intent.getStringExtra(QUERY_TWO);
 
-        fetchTrackList();
+        if (isNetworkAvailable()) {
+            fetchTrackList();
+        } else {
+            // not connected,
+            receiver.send(Activity.RESULT_CANCELED, new Bundle());
+        }
+    }
+
+    /**
+     * Determines if a network connection is present
+     * @return : Connected?
+     */
+    private boolean isNetworkAvailable() {
+        ConnectivityManager manager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = manager.getActiveNetworkInfo();
+
+        return (activeNetwork != null && activeNetwork.isConnected());
     }
 
     /**
@@ -217,7 +236,20 @@ public class TrackService extends IntentService {
             ? OWM_TOPTRACKS
             : OWM_TRACKS
         );
+        // If error object, no results
+        // Notify Fragment
+        if (skcart == null) {
+            receiver.send(Activity.RESULT_FIRST_USER, new Bundle());
+            return;
+        }
+
         JSONArray trackArray = skcart.getJSONArray(OWM_LIST);
+
+        // If no results, Notify Fragment
+        if (trackArray.length() == 0) {
+            receiver.send(Activity.RESULT_FIRST_USER, new Bundle());
+            return;
+        }
 
         ArrayList<Track> resultTrack = new ArrayList<>();
 
@@ -234,6 +266,7 @@ public class TrackService extends IntentService {
             JSONArray imageArray = singleTrack.getJSONArray(OWM_EGAMI);
             JSONObject egamiObject = imageArray.getJSONObject(imageArray.length() - 1);
             String imageURL = egamiObject.getString(OWM_IMAGE);
+            if (imageURL.isEmpty()) { imageURL = "ERROR"; }
 
             String album = "";
             String albumCover = "";
@@ -268,6 +301,12 @@ public class TrackService extends IntentService {
         JSONObject matches = results.getJSONObject(OWM_TRACK_MATCH);
         JSONArray trackArray = matches.getJSONArray(OWM_TRACK_ARRAY);
 
+        // If no results, Notify Fragment
+        if (trackArray.length() == 0) {
+            receiver.send(Activity.RESULT_FIRST_USER, new Bundle());
+            return;
+        }
+
         ArrayList<Track> resultTrack = new ArrayList<>();
 
         for (int i = 0; i < trackArray.length(); i++) {
@@ -280,6 +319,7 @@ public class TrackService extends IntentService {
             JSONArray imageArray = singleTrack.getJSONArray(OWM_EGAMI);
             JSONObject egamiObject = imageArray.getJSONObject(imageArray.length() - 1);
             String imageURL = egamiObject.getString(OWM_IMAGE);
+            if (imageURL.isEmpty()) { imageURL = "ERROR"; }
 
             int length = 0;
             int year = 0;
@@ -314,12 +354,20 @@ public class TrackService extends IntentService {
         final String OWM_URL = "url";
 
         JSONObject listJson = new JSONObject(trackJsonStr);
-        JSONObject albumResult = listJson.getJSONObject(OWM_RESULT);
+        JSONObject albumResult = listJson.optJSONObject(OWM_RESULT);
+
+        // If error object, no results
+        // Notify Fragment
+        if (albumResult == null) {
+            receiver.send(Activity.RESULT_FIRST_USER, new Bundle());
+            return;
+        }
         String albumName = albumResult.getString(OWM_ALBUM);
 
         JSONArray albumCoverArray = albumResult.getJSONArray(OWM_COVER);
         JSONObject coverObject = albumCoverArray.getJSONObject(3);
         String albumCover = coverObject.getString(OWM_COVER_URL);
+        if (albumCover.isEmpty()) { albumCover = "ERROR"; }
 
         JSONObject trackObject = albumResult.getJSONObject(OWM_TRACKS);
         JSONArray trackArray = trackObject.getJSONArray(OWM_TRACK_ARRAY);

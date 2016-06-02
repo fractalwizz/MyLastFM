@@ -20,6 +20,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -55,6 +56,7 @@ public class TrackListFragment extends Fragment implements
     private ArrayList<Track> mTrackList;
     private RecyclerView mRecyclerView;
     private TrackAdapter adapter;
+    private TextView mErrorTextView;
 
     public TrackReceiver trackReceiver;
     private LocationRequest mLocationRequest;
@@ -109,6 +111,8 @@ public class TrackListFragment extends Fragment implements
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
 
+        mErrorTextView = (TextView) view.findViewById(R.id.error_text);
+
         if (savedInstanceState != null && savedInstanceState.containsKey(TRACK_LIST)) {
             mTrackList = savedInstanceState.getParcelableArrayList(TRACK_LIST);
             setupAdapter();
@@ -127,12 +131,24 @@ public class TrackListFragment extends Fragment implements
             @Override
             public void onReceiveResult(int resultCode, Bundle resultData) {
                 if (resultCode == Activity.RESULT_OK) {
+                    mErrorTextView.setVisibility(View.INVISIBLE);
+
                     mTrackList = resultData.getParcelableArrayList(RESULT_VALUE);
 
                     if (mTrackList != null && mTrackList.size() > 0) {
                         Log.w("setupSR", "Successfully acquired ArrayList of tracks: " + String.valueOf(mTrackList.size()));
                         setupAdapter();
                     }
+                } else if (resultCode == Activity.RESULT_FIRST_USER) {
+                    // no results found
+                    Log.w("setupSR", "No Results Found");
+                    mErrorTextView.setVisibility(View.VISIBLE);
+                    mErrorTextView.setText(getResources().getText(R.string.error_results));
+                } else if (resultCode == Activity.RESULT_CANCELED) {
+                    // not connected
+                    Log.w("setupSR", "Device Not Connected");
+                    mErrorTextView.setVisibility(View.VISIBLE);
+                    mErrorTextView.setText(getResources().getText(R.string.error_connection));
                 }
             }
         });

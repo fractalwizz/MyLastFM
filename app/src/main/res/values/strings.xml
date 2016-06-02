@@ -18,6 +18,8 @@
     <!-- TrackListFragment -->
     <string name="track_list_name">TrackListFragment</string>
     <string name="empty"> </string>
+    <string name="error_results">No Track Results Available.</string>
+    <string name="error_connection">No Track Results Available. The Network is not available to fetch track data.</string>
 
     <!-- Settings -->
     <string name="action_settings">Settings</string>
