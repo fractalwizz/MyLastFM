@@ -262,6 +262,9 @@ public class TrackListFragment extends Fragment implements
 
                     new GetLocationTask().execute(mLatitude, mLongitude);
                 }
+            } else {
+                mErrorTextView.setVisibility(View.VISIBLE);
+                mErrorTextView.setText(getResources().getText(R.string.error_results));
             }
         }
     }
