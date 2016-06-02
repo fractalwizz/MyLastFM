@@ -60,8 +60,6 @@ public class TrackListFragment extends Fragment implements
     private LocationRequest mLocationRequest;
     private GoogleApiClient mGoogleApiClient;
 
-//    private OnSearchQueryListener mListener;
-
     public TrackListFragment() {}
 
     /**
@@ -165,6 +163,12 @@ public class TrackListFragment extends Fragment implements
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        getActivity().setTitle("MyLastFM");
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
         mGoogleApiClient.connect();
@@ -197,28 +201,6 @@ public class TrackListFragment extends Fragment implements
         trackIntent.putExtra(TrackService.QUERY_ONE, mQueryOne);
         trackIntent.putExtra(TrackService.QUERY_TWO, mQueryTwo);
         getActivity().startService(trackIntent);
-    }
-
-//    // T0DO: Rename method, update argument and hook method into UI event
-//    public void onButtonPressed(Uri uri) {
-//        if (mListener != null) { mListener.onFragmentInteraction(uri); }
-//    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-//        if (context instanceof OnSearchQueryListener) {
-//            mListener = (OnSearchQueryListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString() + " must implement OnFragmentInteractionListener");
-//        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-//        mListener = null;
     }
 
     // Assistance from http://sanastasov.blogspot.com/2014/12/migrating-from-locationclient-to.html
@@ -273,20 +255,6 @@ public class TrackListFragment extends Fragment implements
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult result) {}
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-//    public interface OnSearchQueryListener {
-//        void onSearchQuery(int fragID, String queryOne, String queryTwo);
-//    }
 
     /**
      * AsyncTask used to acquire country name using location coordinates

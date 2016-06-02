@@ -20,9 +20,8 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
 public class MainActivity extends AppCompatActivity implements
-    NavigationView.OnNavigationItemSelectedListener
-//    ,SearchFragment.OnSearchQueryListener
-{
+    NavigationView.OnNavigationItemSelectedListener,
+    SearchFragment.OnSearchQueryListener {
 
     Toolbar mToolbar;
     DrawerLayout mDrawer;
@@ -126,24 +125,10 @@ public class MainActivity extends AppCompatActivity implements
                 nextFragment = TrackListFragment.newInstance(1, "", "");
                 break;
             case R.id.nav_search:
-                Snackbar.make(mDrawer, "Search Layout Selected", Snackbar.LENGTH_LONG).show();
-                //nextFragment = new SearchFragment();
+                nextFragment = new SearchFragment();
                 break;
             case R.id.nav_playlist:
                 nextFragment = TrackListFragment.newInstance(6, "", "");
-                break;
-
-            case R.id.nav_debug_tag:
-                nextFragment = TrackListFragment.newInstance(2, "Death metal", "");
-                break;
-            case R.id.nav_debug_artist:
-                nextFragment = TrackListFragment.newInstance(3, "Fallujah", "");
-                break;
-            case R.id.nav_debug_track:
-                nextFragment = TrackListFragment.newInstance(4, "Ruination", "");
-                break;
-            case R.id.nav_debug_artalb:
-                nextFragment = TrackListFragment.newInstance(5, "Fallujah", "Nomadic");
                 break;
             default:
         }
@@ -160,7 +145,13 @@ public class MainActivity extends AppCompatActivity implements
         return true;
     }
 
-     /*@Override
+    /**
+     * Callback function for SearchFragment to load search results
+     * @param fragID   : Fragment ID (search query type)
+     * @param queryOne : String query one
+     * @param queryTwo : String query two
+     */
+     @Override
      public void onSearchQuery(int fragID, String queryOne, String queryTwo) {
          FragmentManager fragmentManager = getSupportFragmentManager();
          Fragment nextFragment = TrackListFragment.newInstance(fragID, queryOne, queryTwo);
@@ -171,5 +162,5 @@ public class MainActivity extends AppCompatActivity implements
                  .addToBackStack((String) title)
                  .commit();
          }
-     }*/
+     }
 }

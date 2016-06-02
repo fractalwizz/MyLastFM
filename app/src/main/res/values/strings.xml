@@ -23,4 +23,14 @@
     <string name="action_settings">Settings</string>
     <string name="pref_start_key">pref_startFragment</string>
     <string name="pref_startScreen">Select Start Screen</string>
+
+    <!-- Search Layout -->
+    <string name="search_name">Search Parameters</string>
+    <string name="search_tag">By Tag</string>
+    <string name="search_artist">By Artist</string>
+    <string name="search_track">By Track</string>
+    <string name="search_artalb">By Artist/Album</string>
+    <string name="search_button">Initiate Search</string>
+    <string name="input_one_hint">Tag/Artist/Track</string>
+    <string name="input_two_hint">Album</string>
 </resources>

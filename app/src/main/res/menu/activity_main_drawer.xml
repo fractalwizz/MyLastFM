@@ -20,17 +20,4 @@
         android:id="@+id/nav_playlist"
         android:icon="@drawable/ic_menu_playlist"
         android:title="@string/nav_playlist" />
-
-    <item
-        android:id="@+id/nav_debug_tag"
-        android:title="DEBUG: Tag Search" />
-    <item
-        android:id="@+id/nav_debug_artist"
-        android:title="DEBUG: Artist Search" />
-    <item
-        android:id="@+id/nav_debug_track"
-        android:title="DEBUG: Track Search" />
-    <item
-        android:id="@+id/nav_debug_artalb"
-        android:title="DEBUG: Artist/Album Search" />
 </menu>

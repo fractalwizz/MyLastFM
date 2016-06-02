@@ -33,4 +33,11 @@
         <item name="android:typeface">sans</item>
         <item name="android:ellipsize">end</item>
     </style>
+
+    <style name="SearchText" parent="@style/TextAppearance.AppCompat.Headline">
+        <item name="android:textSize">26sp</item>
+        <item name="android:textColor">@color/MaterialGrey800</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:typeface">serif</item>
+    </style>
 </resources>
