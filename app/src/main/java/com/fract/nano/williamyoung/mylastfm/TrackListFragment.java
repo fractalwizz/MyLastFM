@@ -11,6 +11,7 @@ import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -46,6 +47,7 @@ public class TrackListFragment extends Fragment implements
     private static final String ARG_PARAM3 = "queryTwo";
     public static final String RESULT_VALUE = "resultValue";
     private static final String TRACK_LIST = "track_list";
+    private static final String SINGLE_TRACK = "single_track";
 
     private int mFragID;
     private String mQueryOne;
@@ -166,7 +168,10 @@ public class TrackListFragment extends Fragment implements
             @Override
             public void onItemClick(int position, View v) {
                 Track track = mTrackList.get(position);
-                Toast.makeText(getActivity(), track.getTrackName(), Toast.LENGTH_SHORT).show();
+
+                Intent intent = new Intent(getActivity(), DetailTrackActivity.class)
+                    .putExtra(SINGLE_TRACK, track);
+                ActivityCompat.startActivity(getActivity(), intent, null);
             }
         });
         mRecyclerView.setAdapter(adapter);
