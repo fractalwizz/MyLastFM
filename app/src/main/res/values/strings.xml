@@ -35,5 +35,9 @@
     <string name="search_button">Initiate Search</string>
     <string name="input_one_hint">Tag/Artist/Track</string>
     <string name="input_two_hint">Album</string>
+
+    <!-- Detail Track Activity -->
     <string name="title_activity_detail_track">DetailTrackActivity</string>
+    <string name="format_artist">Artist: %1$s</string>
+    <string name="format_album">Album: %1$s</string>
 </resources>

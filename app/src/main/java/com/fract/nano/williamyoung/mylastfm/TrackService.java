@@ -272,7 +272,7 @@ public class TrackService extends IntentService {
             String albumCover = "";
             int year = 0;
 
-            Track track = Track.newInstance(artistName, album, trackName, year, length, imageURL, albumCover, bandURL);
+            Track track = Track.newInstance(artistName, album, trackName, length, imageURL, albumCover, bandURL);
             resultTrack.add(track);
         }
 
@@ -322,11 +322,10 @@ public class TrackService extends IntentService {
             if (imageURL.isEmpty()) { imageURL = "ERROR"; }
 
             int length = 0;
-            int year = 0;
             String album = "";
             String albumCover = "";
 
-            Track track = Track.newInstance(artistName, album, trackName, year, length, imageURL, albumCover, bandURL);
+            Track track = Track.newInstance(artistName, album, trackName, length, imageURL, albumCover, bandURL);
             resultTrack.add(track);
         }
 
@@ -384,9 +383,8 @@ public class TrackService extends IntentService {
             String bandURL = artistObject.getString(OWM_URL);
 
             int length = 0;
-            int year = 0;
 
-            Track track = Track.newInstance(artistName, albumName, trackName, year, length, albumCover, albumCover, bandURL);
+            Track track = Track.newInstance(artistName, albumName, trackName, length, albumCover, albumCover, bandURL);
             resultTrack.add(track);
         }
 

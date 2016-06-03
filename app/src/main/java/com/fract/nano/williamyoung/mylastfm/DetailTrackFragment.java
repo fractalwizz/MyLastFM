@@ -10,10 +10,21 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 public class DetailTrackFragment extends Fragment {
     private static final String SINGLE_TRACK = "single_track";
     public static final String RESULT_VALUE = "resultValue";
+
+    private View rootView;
+
+    private ImageView mTrackImageView;
+    private ImageView mTrackCoverView;
+    private TextView mArtistTextView;
+    private TextView mAlbumTextView;
 
     private Track mTrack;
     public TrackReceiver trackReceiver;
@@ -33,11 +44,15 @@ public class DetailTrackFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_detail_track, container, false);
+        rootView = inflater.inflate(R.layout.fragment_detail_track, container, false);
 
+        if (savedInstanceState != null && savedInstanceState.containsKey(SINGLE_TRACK)) {
+            mTrack = savedInstanceState.getParcelable(SINGLE_TRACK);
+        }
 
+        updateViews();
 
-        return view;
+        return rootView;
     }
 
     /**
@@ -58,7 +73,37 @@ public class DetailTrackFragment extends Fragment {
     }
 
     private void updateViews() {
-        Log.w("updateViews", mTrack.getAlbum() + ":" + mTrack.getAlbumCover() + ":" + mTrack.getFormattedLength());
+        mTrackImageView = (ImageView) rootView.findViewById(R.id.track_image_view);
+        Picasso.with(getActivity())
+            .load(mTrack.getImage())
+            .error(R.drawable.error)
+            .placeholder(R.drawable.placeholder)
+            .resize(600, 600).centerCrop()
+            .into(mTrackImageView);
+        mTrackImageView.setContentDescription(mTrack.getTrackName());
+
+        mTrackCoverView = (ImageView) rootView.findViewById(R.id.track_cover_view);
+        if (!mTrack.getAlbumCover().equals("")) {
+            Picasso.with(getActivity())
+                .load(mTrack.getAlbumCover())
+                .error(R.drawable.error)
+                .placeholder(R.drawable.placeholder)
+                .resize(600, 600).centerCrop()
+                .into(mTrackCoverView);
+            mTrackCoverView.setContentDescription(mTrack.getAlbum());
+        }
+
+        mArtistTextView = (TextView) rootView.findViewById(R.id.detail_text_artist);
+        mArtistTextView.setText(String.format(getString(R.string.format_artist), mTrack.getArtist()));
+
+        mAlbumTextView = (TextView) rootView.findViewById(R.id.detail_text_album);
+        mAlbumTextView.setText(String.format(getString(R.string.format_album), mTrack.getAlbum()));
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable(SINGLE_TRACK, mTrack);
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -69,7 +114,7 @@ public class DetailTrackFragment extends Fragment {
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        if (mTrack.getAlbumCover().equals("") || mTrack.getYear() != 0 || mTrack.getLength() != 0) {
+        if (mTrack.getAlbum().equals("") || mTrack.getAlbumCover().equals("") || mTrack.getLength() == 0) {
             updateTrack();
         }
         super.onActivityCreated(savedInstanceState);

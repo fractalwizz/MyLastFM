@@ -141,13 +141,21 @@ public class DetailService extends IntentService {
         JSONObject trackObject = trackJson.getJSONObject(OWM_TRACK);
 
         int length = trackObject.getInt(OWM_DURATION);
+        if (length == 0) { length = 1; }
 
-        JSONObject albumObject = trackObject.getJSONObject(OWM_ALBUM);
-        String albumName = albumObject.getString(OWM_ALBUM_NAME);
+        JSONObject albumObject = trackObject.optJSONObject(OWM_ALBUM);
+        String albumName;
+        String coverURL;
+        if (albumObject == null) {
+            albumName = "NA";
+            coverURL = "ERROR";
+        } else {
+            albumName = albumObject.getString(OWM_ALBUM_NAME);
 
-        JSONArray coverArray = albumObject.getJSONArray(OWM_COVER);
-        JSONObject coverObject = coverArray.getJSONObject(coverArray.length() - 1);
-        String coverURL = coverObject.getString(OWM_COVER_URL);
+            JSONArray coverArray = albumObject.getJSONArray(OWM_COVER);
+            JSONObject coverObject = coverArray.getJSONObject(coverArray.length() - 1);
+            coverURL = coverObject.getString(OWM_COVER_URL);
+        }
 
         mTrack.setLength(length);
         mTrack.setAlbum(albumName);

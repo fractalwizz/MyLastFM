@@ -10,7 +10,6 @@ public class Track implements Parcelable {
     private String artist;
     private String album;
     private String trackName;
-    private int year;
     private int length;
     private String image;
     private String albumCover;
@@ -21,20 +20,18 @@ public class Track implements Parcelable {
      * @param artist : Artist Name String
      * @param album : Album Name String
      * @param trackName : Track Name String
-     * @param year : Year of Release int
      * @param length : Duration of Track int
      * @param image : Image URL
      * @param albumCover : Album Cover Image URL
      * @param bandUrl : Last.FM Band URL
      * @return new initialized Track
      */
-    public static Track newInstance(String artist, String album, String trackName, int year, int length, String image, String albumCover, String bandUrl) {
+    public static Track newInstance(String artist, String album, String trackName, int length, String image, String albumCover, String bandUrl) {
         Track track = new Track();
 
         track.setArtist(artist);
         track.setAlbum(album);
         track.setTrackName(trackName);
-        track.setYear(year);
         track.setLength(length);
         track.setImage(image);
         track.setAlbumCover(albumCover);
@@ -54,10 +51,6 @@ public class Track implements Parcelable {
     public String getTrackName() { return trackName; }
 
     public void setTrackName(String trackName) { this.trackName = trackName; }
-
-    public int getYear() { return year; }
-
-    public void setYear(int year) { this.year = year; }
 
     public int getLength() { return length; }
 
@@ -93,7 +86,6 @@ public class Track implements Parcelable {
                 source.readString(), // Artist Name
                 source.readString(), // Album Name
                 source.readString(), // Track Name
-                source.readInt(),    // Year of Release
                 source.readInt(),    // Track Duration
                 source.readString(), // Image URL
                 source.readString(), // Album Cover Image URL
@@ -111,7 +103,6 @@ public class Track implements Parcelable {
         parcel.writeString(artist);
         parcel.writeString(album);
         parcel.writeString(trackName);
-        parcel.writeInt(year);
         parcel.writeInt(length);
         parcel.writeString(image);
         parcel.writeString(albumCover);

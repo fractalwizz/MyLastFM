@@ -5,6 +5,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+
 public class DetailTrackActivity extends AppCompatActivity {
     private static final String SINGLE_TRACK = "single_track";
 
@@ -13,6 +16,13 @@ public class DetailTrackActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_track);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        // Sets up AdMob View at bottom of DetailTrackActivity
+        AdView mAdView = (AdView) findViewById(R.id.adDetailView);
+        AdRequest adRequest = new AdRequest.Builder()
+            .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+            .build();
+        if (mAdView != null) { mAdView.loadAd(adRequest); }
 
         if (savedInstanceState == null) {
             Bundle args = new Bundle();

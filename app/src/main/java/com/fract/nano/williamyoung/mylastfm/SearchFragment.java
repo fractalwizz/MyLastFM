@@ -2,6 +2,7 @@ package com.fract.nano.williamyoung.mylastfm;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.InputType;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.Toast;
 
 public class SearchFragment extends Fragment {
     private OnSearchQueryListener mListener;
@@ -25,9 +27,9 @@ public class SearchFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_search, container, false);
+        final View view = inflater.inflate(R.layout.fragment_search, container, false);
 
-        // setup first Textfield
+        // setup first Text field
         EditText oneText = (EditText) view.findViewById(R.id.query_one_edit);
         oneText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -53,7 +55,7 @@ public class SearchFragment extends Fragment {
         RadioButton radioArtAlb = (RadioButton) view.findViewById(R.id.radio_artalb);
         radioArtAlb.setOnClickListener(mClickListener);
 
-        // setup second Textfield
+        // setup second Text field
         twoText = (EditText) view.findViewById(R.id.query_two_edit);
         twoText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -73,7 +75,13 @@ public class SearchFragment extends Fragment {
              * @param v : v
              */
             @Override
-            public void onClick(View v) { mListener.onSearchQuery(fragID, queryOne, queryTwo); }
+            public void onClick(View v) {
+                if (queryOne.equals("") || (fragID == 5 && queryTwo.equals(""))) {
+                    Snackbar.make(view, "Please enter a search query.", Snackbar.LENGTH_LONG).show();
+                } else {
+                    mListener.onSearchQuery(fragID, queryOne.trim(), queryTwo.trim());
+                }
+            }
         });
 
         return view;
