@@ -41,6 +41,24 @@
         <item name="android:typeface">serif</item>
     </style>
 
-    <style name="DetailText" parent="@style/TextAppearance.AppCompat.Body1">
+    <style name="DetailTrackText" parent="@style/TextAppearance.AppCompat.Body1">
+        <item name="android:textSize">24sp</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="DetailDurationText" parent="@style/TextAppearance.AppCompat.Body1">
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="DetailArtAlbText" parent="@style/DetailTrackText">
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <!-- FAB -->
+    <style name="DetailFAB">
+        <item name="android:backgroundTint">@color/MaterialLightGreen500</item>
+        <item name="android:layout_marginEnd">@dimen/fab_margin</item>
+        <item name="android:layout_marginBottom">@dimen/fab_margin</item>
     </style>
 </resources>

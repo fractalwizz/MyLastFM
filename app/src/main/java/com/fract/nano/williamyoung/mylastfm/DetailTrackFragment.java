@@ -3,13 +3,16 @@ package com.fract.nano.williamyoung.mylastfm;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Handler;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -20,11 +23,6 @@ public class DetailTrackFragment extends Fragment {
     public static final String RESULT_VALUE = "resultValue";
 
     private View rootView;
-
-    private ImageView mTrackImageView;
-    private ImageView mTrackCoverView;
-    private TextView mArtistTextView;
-    private TextView mAlbumTextView;
 
     private Track mTrack;
     public TrackReceiver trackReceiver;
@@ -67,13 +65,16 @@ public class DetailTrackFragment extends Fragment {
                 if (resultCode == Activity.RESULT_OK) {
                     mTrack = resultData.getParcelable(RESULT_VALUE);
                     updateViews();
+                } else if (resultCode == Activity.RESULT_CANCELED) {
+                    Log.w("detailSR", "Device Not Connected");
+                    Snackbar.make(rootView, getString(R.string.detail_disconnected), Snackbar.LENGTH_LONG).show();
                 }
             }
         });
     }
 
     private void updateViews() {
-        mTrackImageView = (ImageView) rootView.findViewById(R.id.track_image_view);
+        ImageView mTrackImageView = (ImageView) rootView.findViewById(R.id.track_image_view);
         Picasso.with(getActivity())
             .load(mTrack.getImage())
             .error(R.drawable.error)
@@ -82,7 +83,7 @@ public class DetailTrackFragment extends Fragment {
             .into(mTrackImageView);
         mTrackImageView.setContentDescription(mTrack.getTrackName());
 
-        mTrackCoverView = (ImageView) rootView.findViewById(R.id.track_cover_view);
+        ImageView mTrackCoverView = (ImageView) rootView.findViewById(R.id.track_cover_view);
         if (!mTrack.getAlbumCover().equals("")) {
             Picasso.with(getActivity())
                 .load(mTrack.getAlbumCover())
@@ -93,11 +94,28 @@ public class DetailTrackFragment extends Fragment {
             mTrackCoverView.setContentDescription(mTrack.getAlbum());
         }
 
-        mArtistTextView = (TextView) rootView.findViewById(R.id.detail_text_artist);
+        TextView mTrackTextView = (TextView) rootView.findViewById(R.id.track_name_text);
+        mTrackTextView.setText(mTrack.getTrackName());
+
+        TextView mDurationTextView = (TextView) rootView.findViewById(R.id.track_duration_text);
+        mDurationTextView.setText(mTrack.getFormattedLength());
+
+        TextView mArtistTextView = (TextView) rootView.findViewById(R.id.detail_text_artist);
         mArtistTextView.setText(String.format(getString(R.string.format_artist), mTrack.getArtist()));
 
-        mAlbumTextView = (TextView) rootView.findViewById(R.id.detail_text_album);
+        TextView mAlbumTextView = (TextView) rootView.findViewById(R.id.detail_text_album);
         mAlbumTextView.setText(String.format(getString(R.string.format_album), mTrack.getAlbum()));
+
+        Button mBandButton = (Button) rootView.findViewById(R.id.band_url_button);
+        mBandButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Uri url = Uri.parse(mTrack.getBandUrl());
+                Intent intent = new Intent(Intent.ACTION_VIEW, url);
+
+                startActivity(intent);
+            }
+        });
     }
 
     @Override

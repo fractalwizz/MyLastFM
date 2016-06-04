@@ -122,7 +122,7 @@ public class SearchFragment extends Fragment {
                     if (checked) {
                         fragID = 5;
                         twoText.setEnabled(true);
-                        twoText.setInputType(InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
+                        twoText.setInputType(InputType.TYPE_TEXT_FLAG_CAP_WORDS);
                     }
                     break;
             }

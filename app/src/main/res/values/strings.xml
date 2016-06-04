@@ -1,12 +1,12 @@
 <resources>
-    <string name="app_name">MyLastFM</string>
-    <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="app_name" translatable="false">MyLastFM</string>
+    <string name="banner_ad_unit_id" translatable="false">ca-app-pub-3940256099942544/6300978111</string>
 
     <!-- Navigation Drawer Header -->
     <string name="nav_open">Open navigation drawer</string>
     <string name="nav_close">Close navigation drawer</string>
     <string name="nav_title">MyLastFM</string>
-    <string name="nav_email">fakeemail@mylastfm.com</string>
+    <string name="nav_email" translatable="false">fakeemail@mylastfm.com</string>
 
     <!-- Navigation Drawer Options -->
     <string name="nav_browse">Browse</string>
@@ -16,14 +16,14 @@
     <string name="nav_playlist">My Playlist</string>
 
     <!-- TrackListFragment -->
-    <string name="track_list_name">TrackListFragment</string>
-    <string name="empty"> </string>
+    <string name="track_list_name" translatable="false">TrackListFragment</string>
+    <string name="empty" translatable="false"> </string>
     <string name="error_results">No Track Results Available.</string>
     <string name="error_connection">No Track Results Available. The Network is not available to fetch track data.</string>
 
     <!-- Settings -->
     <string name="action_settings">Settings</string>
-    <string name="pref_start_key">pref_startFragment</string>
+    <string name="pref_start_key" translatable="false">pref_startFragment</string>
     <string name="pref_startScreen">Select Start Screen</string>
 
     <!-- Search Layout -->
@@ -40,4 +40,7 @@
     <string name="title_activity_detail_track">DetailTrackActivity</string>
     <string name="format_artist">Artist: %1$s</string>
     <string name="format_album">Album: %1$s</string>
+    <string name="detail_disconnected">Network not available. Details may be incomplete.</string>
+    <string name="band_button">Artist Page on Last.FM</string>
+    <string name="action_add">Add Track</string>
 </resources>

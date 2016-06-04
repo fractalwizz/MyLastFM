@@ -155,6 +155,7 @@ public class DetailService extends IntentService {
             JSONArray coverArray = albumObject.getJSONArray(OWM_COVER);
             JSONObject coverObject = coverArray.getJSONObject(coverArray.length() - 1);
             coverURL = coverObject.getString(OWM_COVER_URL);
+            if (coverURL.isEmpty()) { coverURL = "ERROR"; }
         }
 
         mTrack.setLength(length);

@@ -371,6 +371,12 @@ public class TrackService extends IntentService {
         JSONObject trackObject = albumResult.getJSONObject(OWM_TRACKS);
         JSONArray trackArray = trackObject.getJSONArray(OWM_TRACK_ARRAY);
 
+        // If no results, Notify Fragment
+        if (trackArray.length() == 0) {
+            receiver.send(Activity.RESULT_FIRST_USER, new Bundle());
+            return;
+        }
+
         ArrayList<Track> resultTrack = new ArrayList<>();
 
         for (int i = 0; i < trackArray.length(); i++) {
