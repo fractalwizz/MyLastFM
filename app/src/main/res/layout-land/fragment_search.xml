@@ -1,30 +1,24 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="com.fract.nano.williamyoung.mylastfm.SearchFragment">
+    android:gravity="center"
+    tools:context="com.fract.nano.williamyoung.mylastfm.SearchFragment" >
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:id="@+id/search_parameters"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="@string/search_name"
         android:paddingTop="@dimen/search_query_top_padding"
-        style="@style/SearchText"/>
-
-    <EditText
-        android:id="@+id/query_one_edit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textCapWords"
-        android:saveEnabled="true"
-        android:maxLength="50"
-        android:maxLines="1"
-        android:hint="@string/input_one_hint" />
+        style="@style/SearchText" />
 
     <RadioGroup
+        android:id="@+id/radio_group"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/search_parameters"
         android:orientation="vertical" >
 
         <RadioButton
@@ -51,9 +45,26 @@
     </RadioGroup>
 
     <EditText
+        android:id="@+id/query_one_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/search_parameters"
+        android:layout_toEndOf="@id/radio_group"
+        android:layout_marginStart="@dimen/search_query_start_margin"
+        android:inputType="textCapWords"
+        android:saveEnabled="true"
+        android:maxLength="50"
+        android:maxLines="1"
+        android:hint="@string/input_one_hint" />
+
+    <EditText
         android:id="@+id/query_two_edit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/query_one_edit"
+        android:layout_toEndOf="@id/radio_group"
+        android:layout_marginStart="@dimen/search_query_start_margin"
+        android:paddingTop="@dimen/search_query_top_padding"
         android:inputType="textCapWords"
         android:saveEnabled="true"
         android:enabled="false"
@@ -65,8 +76,9 @@
         android:id="@+id/search_button"
         android:layout_width="@dimen/search_button_width"
         android:layout_height="@dimen/search_button_height"
+        android:layout_below="@id/radio_group"
         android:layout_marginTop="@dimen/search_button_margin_top"
         android:background="@drawable/rounded_button"
         android:elevation="2dp"
         android:text="@string/search_button" />
-</LinearLayout>
+</RelativeLayout>

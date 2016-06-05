@@ -7,6 +7,7 @@
     <string name="nav_close">Close navigation drawer</string>
     <string name="nav_title">MyLastFM</string>
     <string name="nav_email" translatable="false">fakeemail@mylastfm.com</string>
+    <string name="app_icon_desc">MyLastFM</string>
 
     <!-- Navigation Drawer Options -->
     <string name="nav_browse">Browse</string>

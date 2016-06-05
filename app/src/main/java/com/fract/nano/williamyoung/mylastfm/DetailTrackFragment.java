@@ -74,12 +74,14 @@ public class DetailTrackFragment extends Fragment {
     }
 
     private void updateViews() {
+        int iS = getResources().getInteger(R.integer.image_size);
+
         ImageView mTrackImageView = (ImageView) rootView.findViewById(R.id.track_image_view);
         Picasso.with(getActivity())
             .load(mTrack.getImage())
             .error(R.drawable.error)
             .placeholder(R.drawable.placeholder)
-            .resize(600, 600).centerCrop()
+            .resize(iS, iS).centerCrop()
             .into(mTrackImageView);
         mTrackImageView.setContentDescription(mTrack.getTrackName());
 
@@ -89,7 +91,7 @@ public class DetailTrackFragment extends Fragment {
                 .load(mTrack.getAlbumCover())
                 .error(R.drawable.error)
                 .placeholder(R.drawable.placeholder)
-                .resize(600, 600).centerCrop()
+                .resize(iS, iS).centerCrop()
                 .into(mTrackCoverView);
             mTrackCoverView.setContentDescription(mTrack.getAlbum());
         }

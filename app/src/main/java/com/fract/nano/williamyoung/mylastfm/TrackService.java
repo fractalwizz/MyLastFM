@@ -270,7 +270,6 @@ public class TrackService extends IntentService {
 
             String album = "";
             String albumCover = "";
-            int year = 0;
 
             Track track = Track.newInstance(artistName, album, trackName, length, imageURL, albumCover, bandURL);
             resultTrack.add(track);
