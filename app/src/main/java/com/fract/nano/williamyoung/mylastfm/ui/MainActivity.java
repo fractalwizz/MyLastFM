@@ -1,7 +1,9 @@
 package com.fract.nano.williamyoung.mylastfm.ui;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -10,12 +12,16 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.fract.nano.williamyoung.mylastfm.R;
+import com.fract.nano.williamyoung.mylastfm.data.TrackContract;
+import com.fract.nano.williamyoung.mylastfm.data.TrackHelper;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
@@ -26,6 +32,7 @@ public class MainActivity extends AppCompatActivity implements
     Toolbar mToolbar;
     DrawerLayout mDrawer;
     NavigationView mNavigation;
+    private TrackHelper mHelper;
 
     // Used to store the last screen title
     private CharSequence title;
@@ -34,6 +41,9 @@ public class MainActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mHelper = new TrackHelper(this);
+
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
 
@@ -98,6 +108,33 @@ public class MainActivity extends AppCompatActivity implements
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             startActivity(new Intent(this, SettingsActivity.class));
+            return true;
+        } else if (id == R.id.action_clear) {
+            new AlertDialog.Builder(this)
+                .setTitle("Clear My Playlist")
+                .setMessage("Are you sure you want to clear My Playlist?")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        SQLiteDatabase db = mHelper.getWritableDatabase();
+
+                        if (db != null) {
+                            db.delete(TrackContract.TrackEntry.TABLE_NAME,
+                                null,
+                                null
+                            );
+                        }
+
+                        Toast.makeText(getApplicationContext(), "Playlist Cleared", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {}
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+
             return true;
         }
 

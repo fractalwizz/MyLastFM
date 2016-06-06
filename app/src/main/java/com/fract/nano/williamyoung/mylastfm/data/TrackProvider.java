@@ -10,8 +10,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 public class TrackProvider extends ContentProvider {
+    private static final String LOG_TAG = TrackProvider.class.getSimpleName();
+
     private SQLiteDatabase db;
     private TrackHelper mHelper;
     public static final UriMatcher mMatcher = buildUriMatcher();
@@ -54,6 +57,7 @@ public class TrackProvider extends ContentProvider {
      */
     @Override
     public Cursor query(@NonNull Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+        Log.w(LOG_TAG, "Query Entries");
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
         builder.setTables(TrackContract.TrackEntry.TABLE_NAME);
 
@@ -104,6 +108,7 @@ public class TrackProvider extends ContentProvider {
      */
     @Override
     public Uri insert(@NonNull Uri uri, ContentValues values) {
+        Log.w(LOG_TAG, "Insert Entry");
         if (mMatcher.match(uri) != TrackContract.TRACK_LIST) {
             throw new IllegalArgumentException("Invalid URI: " + uri);
         }
@@ -131,6 +136,7 @@ public class TrackProvider extends ContentProvider {
     @Override
     public int delete(@NonNull Uri uri, String selection, String[] selectionArgs) {
         int delete = 0;
+        Log.w(LOG_TAG, "Delete Entry");
 
         switch (mMatcher.match(uri)) {
             case TrackContract.TRACK_LIST:
@@ -167,6 +173,7 @@ public class TrackProvider extends ContentProvider {
     @Override
     public int update(@NonNull Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         int update = 0;
+        Log.w(LOG_TAG, "Update Entry");
 
         switch (mMatcher.match(uri)) {
             case TrackContract.TRACK_LIST:

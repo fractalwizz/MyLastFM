@@ -1,13 +1,18 @@
 package com.fract.nano.williamyoung.mylastfm.ui;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Handler;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.res.ResourcesCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +22,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.fract.nano.williamyoung.mylastfm.R;
+import com.fract.nano.williamyoung.mylastfm.data.TrackContract;
+import com.fract.nano.williamyoung.mylastfm.data.TrackHelper;
 import com.fract.nano.williamyoung.mylastfm.util.DetailService;
 import com.fract.nano.williamyoung.mylastfm.util.Track;
 import com.fract.nano.williamyoung.mylastfm.util.TrackReceiver;
@@ -31,6 +38,9 @@ public class DetailTrackFragment extends Fragment {
     private Track mTrack;
     public TrackReceiver trackReceiver;
 
+    private TrackHelper mHelper;
+    private boolean toAdd = true;
+
     public DetailTrackFragment() {}
 
     @Override
@@ -40,6 +50,8 @@ public class DetailTrackFragment extends Fragment {
         if (getArguments() != null) {
             mTrack = getArguments().getParcelable(SINGLE_TRACK);
         }
+
+        mHelper = new TrackHelper(getActivity());
 
         setupServiceReceiver();
     }
@@ -125,6 +137,90 @@ public class DetailTrackFragment extends Fragment {
                 startActivity(intent);
             }
         });
+
+        final FloatingActionButton mFab = (FloatingActionButton) rootView.findViewById(R.id.add_fab);
+        mFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //SQLiteDatabase db = mHelper.getWritableDatabase();
+
+                if (toAdd) {
+                    ContentValues values = new ContentValues();
+
+                    values.clear();
+
+                    values.put(TrackContract.TrackEntry.COLUMN_ARTiST, mTrack.getArtist());
+                    values.put(TrackContract.TrackEntry.COLUMN_ALBUM, mTrack.getAlbum());
+                    values.put(TrackContract.TrackEntry.COLUMN_TRACK, mTrack.getTrackName());
+                    values.put(TrackContract.TrackEntry.COLUMN_DURATION, mTrack.getLength());
+                    values.put(TrackContract.TrackEntry.COLUMN_IMAGE, mTrack.getImage());
+                    values.put(TrackContract.TrackEntry.COLUMN_COVER, mTrack.getAlbumCover());
+                    values.put(TrackContract.TrackEntry.COLUMN_URL, mTrack.getBandUrl());
+
+                    Uri uri = TrackContract.TrackEntry.CONTENT_URI;
+                    getActivity().getContentResolver().insert(uri, values);
+
+                    // Change FAB
+                    mFab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_remove));
+                    mFab.setBackgroundTintList(ResourcesCompat.getColorStateList(getResources(), R.color.MaterialRed500, getActivity().getTheme()));
+
+                    toAdd = false;
+                } else {
+                    Uri uri = TrackContract.TrackEntry.CONTENT_URI;
+                    String selection = TrackContract.TrackEntry.COLUMN_ARTiST
+                        + "=? AND "
+                        + TrackContract.TrackEntry.COLUMN_ALBUM
+                        + "=? AND "
+                        + TrackContract.TrackEntry.COLUMN_TRACK
+                        + "=?";
+
+                    getActivity().getContentResolver().delete(uri,
+                        selection,
+                        new String[]{
+                            mTrack.getArtist(),
+                            mTrack.getAlbum(),
+                            mTrack.getTrackName()
+                        }
+                    );
+                    // Change FAB back
+                    mFab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_add));
+                    mFab.setBackgroundTintList(ResourcesCompat.getColorStateList(getResources(), R.color.MaterialLightGreen500, getActivity().getTheme()));
+
+                    toAdd = true;
+                }
+            }
+        });
+
+        String check = TrackContract.TrackEntry.COLUMN_ARTiST
+                + "=? AND "
+                + TrackContract.TrackEntry.COLUMN_ALBUM
+                + "=? AND "
+                + TrackContract.TrackEntry.COLUMN_TRACK
+                + "=?";
+
+        Cursor testTrack = getActivity().getContentResolver()
+                .query(TrackContract.TrackEntry.CONTENT_URI,
+                        null,
+                        check,
+                        new String[]{
+                                mTrack.getArtist(),
+                                mTrack.getAlbum(),
+                                mTrack.getTrackName()
+                        },
+                        null
+                );
+
+        if (testTrack != null && testTrack.getCount() != 0) {
+            Log.w("DetailTF", "toAdd");
+            toAdd = false;
+
+            mFab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_remove));
+            mFab.setBackgroundTintList(ResourcesCompat.getColorStateList(getResources(), R.color.MaterialRed500, getActivity().getTheme()));
+
+            testTrack.close();
+        } else {
+            Log.w("DetailTF", "notToAdd");
+        }
     }
 
     @Override

@@ -57,7 +57,6 @@
 
     <!-- FAB -->
     <style name="DetailFAB">
-        <item name="android:backgroundTint">@color/MaterialLightGreen500</item>
         <item name="android:layout_marginEnd">@dimen/fab_margin</item>
         <item name="android:layout_marginBottom">@dimen/fab_margin</item>
     </style>
