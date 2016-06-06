@@ -1,7 +1,9 @@
-package com.fract.nano.williamyoung.mylastfm;
+package com.fract.nano.williamyoung.mylastfm.ui;
 
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
+
+import com.fract.nano.williamyoung.mylastfm.R;
 
 public class SettingsActivity extends PreferenceActivity {
     @Override

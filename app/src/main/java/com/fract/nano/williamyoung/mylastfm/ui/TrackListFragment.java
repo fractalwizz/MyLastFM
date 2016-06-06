@@ -1,4 +1,4 @@
-package com.fract.nano.williamyoung.mylastfm;
+package com.fract.nano.williamyoung.mylastfm.ui;
 
 import android.Manifest;
 import android.app.Activity;
@@ -11,7 +11,6 @@ import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -22,8 +21,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.fract.nano.williamyoung.mylastfm.R;
+import com.fract.nano.williamyoung.mylastfm.util.SimpleDividerItemDecoration;
+import com.fract.nano.williamyoung.mylastfm.util.Track;
+import com.fract.nano.williamyoung.mylastfm.util.TrackAdapter;
+import com.fract.nano.williamyoung.mylastfm.util.TrackReceiver;
+import com.fract.nano.williamyoung.mylastfm.util.TrackService;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;

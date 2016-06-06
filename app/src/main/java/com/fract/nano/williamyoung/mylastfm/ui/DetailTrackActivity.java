@@ -1,10 +1,11 @@
-package com.fract.nano.williamyoung.mylastfm;
+package com.fract.nano.williamyoung.mylastfm.ui;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import com.fract.nano.williamyoung.mylastfm.R;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 

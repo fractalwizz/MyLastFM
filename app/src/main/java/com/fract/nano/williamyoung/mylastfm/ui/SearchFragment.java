@@ -1,4 +1,4 @@
-package com.fract.nano.williamyoung.mylastfm;
+package com.fract.nano.williamyoung.mylastfm.ui;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -14,6 +14,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Toast;
+
+import com.fract.nano.williamyoung.mylastfm.R;
 
 public class SearchFragment extends Fragment {
     private OnSearchQueryListener mListener;

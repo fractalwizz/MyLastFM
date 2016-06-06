@@ -1,6 +1,8 @@
-package com.fract.nano.williamyoung.mylastfm;
+package com.fract.nano.williamyoung.mylastfm.util;
 
 import android.content.Context;
+
+import com.fract.nano.williamyoung.mylastfm.R;
 
 public class Utility {
     /**

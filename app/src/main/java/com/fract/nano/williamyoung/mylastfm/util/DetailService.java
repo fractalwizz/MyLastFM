@@ -1,4 +1,4 @@
-package com.fract.nano.williamyoung.mylastfm;
+package com.fract.nano.williamyoung.mylastfm.util;
 
 import android.app.Activity;
 import android.app.IntentService;

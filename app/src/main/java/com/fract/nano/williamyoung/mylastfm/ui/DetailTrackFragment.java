@@ -1,4 +1,4 @@
-package com.fract.nano.williamyoung.mylastfm;
+package com.fract.nano.williamyoung.mylastfm.ui;
 
 import android.app.Activity;
 import android.content.Context;
@@ -16,6 +16,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.fract.nano.williamyoung.mylastfm.R;
+import com.fract.nano.williamyoung.mylastfm.util.DetailService;
+import com.fract.nano.williamyoung.mylastfm.util.Track;
+import com.fract.nano.williamyoung.mylastfm.util.TrackReceiver;
 import com.squareup.picasso.Picasso;
 
 public class DetailTrackFragment extends Fragment {
