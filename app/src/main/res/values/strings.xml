@@ -44,4 +44,7 @@
     <string name="detail_disconnected">Network not available. Details may be incomplete.</string>
     <string name="band_button">Artist Page on Last.FM</string>
     <string name="action_add">Add Track</string>
+
+    <!-- ContentProvider -->
+    <string name="content_authority">com.fract.nano.williamyoung.mylastfm</string>
 </resources>

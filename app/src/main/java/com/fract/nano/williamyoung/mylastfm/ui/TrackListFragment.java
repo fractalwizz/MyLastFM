@@ -160,6 +160,10 @@ public class TrackListFragment extends Fragment implements
         });
     }
 
+    /**
+     * Creates and sets a TrackAdapter for use with the RecyclerView
+     * Includes itemClickListener for DetailTrackActivity
+     */
     private void setupAdapter() {
         adapter = new TrackAdapter(getActivity(), mTrackList);
         adapter.setOnItemClickListener(new TrackAdapter.ClickListener() {

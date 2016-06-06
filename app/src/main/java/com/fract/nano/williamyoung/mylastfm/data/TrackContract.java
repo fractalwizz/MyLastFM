@@ -10,7 +10,10 @@ public class TrackContract {
 
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
     public static final String PATH_TRACK = "track";
+    public static final int TRACK_LIST = 1;
+    public static final int TRACK_ITEM = 2;
 
+    // Database Table Columns
     public static final class TrackEntry implements BaseColumns {
         public static final String TABLE_NAME = "track";
 

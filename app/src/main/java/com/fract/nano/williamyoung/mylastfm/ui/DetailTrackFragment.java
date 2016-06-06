@@ -77,6 +77,9 @@ public class DetailTrackFragment extends Fragment {
         });
     }
 
+    /**
+     * Fills layout views with Track data
+     */
     private void updateViews() {
         int iS = getResources().getInteger(R.integer.image_size);
 

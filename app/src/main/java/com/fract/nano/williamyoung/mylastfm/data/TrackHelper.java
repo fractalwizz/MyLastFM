@@ -10,6 +10,10 @@ public class TrackHelper extends SQLiteOpenHelper {
 
     public TrackHelper(Context context) { super(context, DATABASE_NAME, null, DATABASE_VERSION); }
 
+    /**
+     * Creates database table schema
+     * @param db : writable database object
+     */
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE " + TrackContract.TrackEntry.TABLE_NAME + " ("
@@ -25,6 +29,12 @@ public class TrackHelper extends SQLiteOpenHelper {
         );
     }
 
+    /**
+     * Recreates table if database version is increased
+     * @param db         : database currently open
+     * @param oldVersion : old database version
+     * @param newVersion : new database version
+     */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TrackContract.TrackEntry.TABLE_NAME);

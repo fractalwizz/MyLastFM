@@ -55,6 +55,11 @@
         <service
             android:name=".util.DetailService"
             android:exported="false" />
+
+        <provider
+            android:authorities="@string/content_authority"
+            android:name=".data.TrackProvider"
+            android:exported="false" />
     </application>
 
 </manifest>

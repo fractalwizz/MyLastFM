@@ -70,6 +70,7 @@ public class SearchFragment extends Fragment {
             public void afterTextChanged(Editable s) { queryTwo = s.toString(); }
         });
 
+        // Search query button - initiates searchQuery
         Button mButton = (Button) view.findViewById(R.id.search_button);
         mButton.setOnClickListener(new View.OnClickListener() {
             /**
