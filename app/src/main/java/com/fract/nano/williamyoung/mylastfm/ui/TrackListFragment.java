@@ -5,15 +5,20 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -23,6 +28,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.fract.nano.williamyoung.mylastfm.R;
+import com.fract.nano.williamyoung.mylastfm.data.TrackContract;
+import com.fract.nano.williamyoung.mylastfm.util.PlaylistAdapter;
 import com.fract.nano.williamyoung.mylastfm.util.SimpleDividerItemDecoration;
 import com.fract.nano.williamyoung.mylastfm.util.Track;
 import com.fract.nano.williamyoung.mylastfm.util.TrackAdapter;
@@ -43,6 +50,7 @@ import java.util.Locale;
  * Supports Results from 6 different API calls, as well as from a Content Provider
  */
 public class TrackListFragment extends Fragment implements
+    LoaderManager.LoaderCallbacks<Cursor>,
     GoogleApiClient.ConnectionCallbacks,
     GoogleApiClient.OnConnectionFailedListener {
 
@@ -62,7 +70,10 @@ public class TrackListFragment extends Fragment implements
     private ArrayList<Track> mTrackList;
     private RecyclerView mRecyclerView;
     private TrackAdapter adapter;
+    private PlaylistAdapter mAdapter;
     private TextView mErrorTextView;
+
+    private static final int my_loader_id = 0;
 
     public TrackReceiver trackReceiver;
     private LocationRequest mLocationRequest;
@@ -124,6 +135,9 @@ public class TrackListFragment extends Fragment implements
             setupAdapter();
         }
 
+        // Cursor-specific adapter initialization
+        if (mFragID == 6) { setupPlaylistAdapter(); }
+
         return view;
     }
 
@@ -171,7 +185,7 @@ public class TrackListFragment extends Fragment implements
             /**
              * Individual RecyclerView item selected
              * @param position : item selected index
-             * @param v : view contained within the RecyclerView List
+             * @param v        : view contained within the RecyclerView List
              */
             @Override
             public void onItemClick(int position, View v) {
@@ -185,9 +199,30 @@ public class TrackListFragment extends Fragment implements
         mRecyclerView.setAdapter(adapter);
     }
 
+    private void setupPlaylistAdapter() {
+        mAdapter = new PlaylistAdapter(getActivity());
+        mAdapter.setOnItemClickListener(new PlaylistAdapter.ClickListener() {
+
+            /**
+             * Individual RecyclerView Playlist item selected
+             * @param track : track object for use within DetailTrack
+             * @param v     : view contained within RecylcerView List
+             */
+            @Override
+            public void onItemClick(Track track, View v) {
+                Intent intent = new Intent(getActivity(), DetailTrackActivity.class)
+                    .putExtra(SINGLE_TRACK, track);
+                ActivityCompat.startActivity(getActivity(), intent, null);
+            }
+        });
+        mRecyclerView.setAdapter(mAdapter);
+    }
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putParcelableArrayList(TRACK_LIST, mTrackList);
+        if (mTrackList != null) {
+            outState.putParcelableArrayList(TRACK_LIST, mTrackList);
+        }
         super.onSaveInstanceState(outState);
     }
 
@@ -216,7 +251,47 @@ public class TrackListFragment extends Fragment implements
         // Don't immediately updateTrack if GEO info needed or data from ContentProvider
         if (mFragID != 1 && mFragID != 6 && mTrackList == null) { updateTrack(); }
 
+        // Initialize CursorLoader
+        if (mFragID == 6) {
+            getLoaderManager().initLoader(my_loader_id, null, this);
+        }
+
         super.onActivityCreated(savedInstanceState);
+    }
+
+    /**
+     * When loader is initialized, begin DB query
+     * @param id   : ID of CursorLoader
+     * @param args : arguments of CursorLoader
+     * @return : new CursorLoader with desired data
+     */
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        String sortOrder = TrackContract.TrackEntry.COLUMN_TRACK + " ASC";
+
+        Uri uri = TrackContract.TrackEntry.CONTENT_URI;
+
+        return new CursorLoader(getActivity(), uri, PlaylistAdapter.TRACK_COLUMNS, null, null, sortOrder);
+    }
+
+    /**
+     * Get and Use Cursor data with RecyclerView Adapter
+     * @param loader : CursorLoader
+     * @param data   : Cursor with desired data
+     */
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        mAdapter.swapCursor(data);
+    }
+
+    /**
+     * If reset, clear the RecyclerView Adapter
+     * @param loader : CursorLoader
+     */
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        // Swap cursor with nothing (reset)
+        mAdapter.swapCursor(null);
     }
 
     /**

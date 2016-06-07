@@ -29,7 +29,7 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.TrackViewHol
 
     /**
      * Constructor with ArrayList included
-     * @param context : Activity/Fragment context
+     * @param context   : Activity/Fragment context
      * @param trackList : ArrayList of Track objects
      */
     public TrackAdapter(Context context, ArrayList<Track> trackList) {

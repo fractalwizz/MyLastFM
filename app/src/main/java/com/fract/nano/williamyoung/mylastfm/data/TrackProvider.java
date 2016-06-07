@@ -12,6 +12,9 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+// https://www.sitepoint.com/using-androids-content-providers-manage-app-data/
+// Assistance with ContentProvider
+
 public class TrackProvider extends ContentProvider {
     private static final String LOG_TAG = TrackProvider.class.getSimpleName();
 
