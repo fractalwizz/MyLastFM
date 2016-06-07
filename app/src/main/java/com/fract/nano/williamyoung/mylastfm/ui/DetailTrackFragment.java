@@ -95,6 +95,9 @@ public class DetailTrackFragment extends Fragment {
     private void updateViews() {
         int iS = getResources().getInteger(R.integer.image_size);
 
+        // two-pane mode and fragment without track
+        if (mTrack == null) { return; }
+
         ImageView mTrackImageView = (ImageView) rootView.findViewById(R.id.track_image_view);
         Picasso.with(getActivity())
             .load(mTrack.getImage())
@@ -142,8 +145,6 @@ public class DetailTrackFragment extends Fragment {
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //SQLiteDatabase db = mHelper.getWritableDatabase();
-
                 if (toAdd) {
                     ContentValues values = new ContentValues();
 
@@ -192,23 +193,23 @@ public class DetailTrackFragment extends Fragment {
         });
 
         String check = TrackContract.TrackEntry.COLUMN_ARTiST
-                + "=? AND "
-                + TrackContract.TrackEntry.COLUMN_ALBUM
-                + "=? AND "
-                + TrackContract.TrackEntry.COLUMN_TRACK
-                + "=?";
+            + "=? AND "
+            + TrackContract.TrackEntry.COLUMN_ALBUM
+            + "=? AND "
+            + TrackContract.TrackEntry.COLUMN_TRACK
+            + "=?";
 
         Cursor testTrack = getActivity().getContentResolver()
-                .query(TrackContract.TrackEntry.CONTENT_URI,
-                        null,
-                        check,
-                        new String[]{
-                                mTrack.getArtist(),
-                                mTrack.getAlbum(),
-                                mTrack.getTrackName()
-                        },
-                        null
-                );
+            .query(TrackContract.TrackEntry.CONTENT_URI,
+                null,
+                check,
+                new String[]{
+                    mTrack.getArtist(),
+                    mTrack.getAlbum(),
+                    mTrack.getTrackName()
+                },
+                null
+            );
 
         if (testTrack != null && testTrack.getCount() != 0) {
             Log.w("DetailTF", "toAdd");

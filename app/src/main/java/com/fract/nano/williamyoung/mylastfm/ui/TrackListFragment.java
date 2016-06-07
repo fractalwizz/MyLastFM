@@ -59,7 +59,6 @@ public class TrackListFragment extends Fragment implements
     private static final String ARG_PARAM3 = "queryTwo";
     public static final String RESULT_VALUE = "resultValue";
     private static final String TRACK_LIST = "track_list";
-    private static final String SINGLE_TRACK = "single_track";
 
     private int mFragID;
     private String mQueryOne;
@@ -190,10 +189,7 @@ public class TrackListFragment extends Fragment implements
             @Override
             public void onItemClick(int position, View v) {
                 Track track = mTrackList.get(position);
-
-                Intent intent = new Intent(getActivity(), DetailTrackActivity.class)
-                    .putExtra(SINGLE_TRACK, track);
-                ActivityCompat.startActivity(getActivity(), intent, null);
+                ((Callback) getActivity()).onItemSelected(track, v);
             }
         });
         mRecyclerView.setAdapter(adapter);
@@ -210,9 +206,7 @@ public class TrackListFragment extends Fragment implements
              */
             @Override
             public void onItemClick(Track track, View v) {
-                Intent intent = new Intent(getActivity(), DetailTrackActivity.class)
-                    .putExtra(SINGLE_TRACK, track);
-                ActivityCompat.startActivity(getActivity(), intent, null);
+                ((Callback) getActivity()).onItemSelected(track, v);
             }
         });
         mRecyclerView.setAdapter(mAdapter);
@@ -362,6 +356,10 @@ public class TrackListFragment extends Fragment implements
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult result) {}
+
+    public interface Callback {
+        void onItemSelected(Track track, View v);
+    }
 
     /**
      * AsyncTask used to acquire country name using location coordinates

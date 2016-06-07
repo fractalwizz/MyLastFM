@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.design.widget.NavigationView;
@@ -15,24 +16,31 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.fract.nano.williamyoung.mylastfm.R;
 import com.fract.nano.williamyoung.mylastfm.data.TrackContract;
 import com.fract.nano.williamyoung.mylastfm.data.TrackHelper;
+import com.fract.nano.williamyoung.mylastfm.util.Track;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
 public class MainActivity extends AppCompatActivity implements
+    TrackListFragment.Callback,
     NavigationView.OnNavigationItemSelectedListener,
     SearchFragment.OnSearchQueryListener {
+
+    private static final String SINGLE_TRACK = "single_track";
 
     Toolbar mToolbar;
     DrawerLayout mDrawer;
     NavigationView mNavigation;
     private TrackHelper mHelper;
+    private boolean mTwoPane;
 
     // Used to store the last screen title
     private CharSequence title;
@@ -76,6 +84,23 @@ public class MainActivity extends AppCompatActivity implements
             fragmentManager.beginTransaction()
                 .add(R.id.container, fragment)
                 .commit();
+        }
+
+        if (findViewById(R.id.detail_container) != null) {
+            mTwoPane = true;
+            Log.w("MainActivity", "Choosing dual-pane");
+
+            if (savedInstanceState == null) {
+                Log.w("MainActivity", "setup blank detail");
+
+                DetailTrackFragment frag = new DetailTrackFragment();
+                getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.detail_container, frag)
+                    .commit();
+            }
+        } else {
+            mTwoPane = false;
+            Log.w("MainActivity", "Single-pane");
         }
 
         mNavigation = (NavigationView) findViewById(R.id.nav_view);
@@ -180,6 +205,34 @@ public class MainActivity extends AppCompatActivity implements
 
         if (mDrawer != null) { mDrawer.closeDrawer(GravityCompat.START); }
         return true;
+    }
+
+    /**
+     * Callback function to instantiate DetailTrack processes
+     * In two-pane mode, replaces detail_container with fragment
+     * In single-pane mode, starts Activity
+     * @param track : Track object to push off to DetailTrack
+     * @param view  : view
+     */
+    @Override
+    public void onItemSelected(Track track, View view) {
+        if (mTwoPane) {
+            // Show Detail Track view in MainActivity
+            Bundle args = new Bundle();
+            args.putParcelable(SINGLE_TRACK, track);
+
+            DetailTrackFragment fragment = new DetailTrackFragment();
+            fragment.setArguments(args);
+
+            getSupportFragmentManager().beginTransaction()
+                .replace(R.id.detail_container, fragment)
+                .commit();
+        } else {
+            // Start new DetailTrackActivity
+            Intent intent = new Intent(this, DetailTrackActivity.class)
+                .putExtra(SINGLE_TRACK, track);
+            ActivityCompat.startActivity(this, intent, null);
+        }
     }
 
     /**
