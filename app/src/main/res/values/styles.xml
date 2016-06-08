@@ -65,10 +65,15 @@
     <style name="WidgetAppText" parent="@style/TextAppearance.AppCompat.Body1">
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:textColor">@color/MaterialGrey800</item>
-        <item name="android:textSize">15sp</item>
+        <item name="android:textSize">20sp</item>
     </style>
 
     <style name="WidgetText" parent="@style/WidgetAppText">
-        <item name="android:textSize">13sp</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+    <style name="WidgetLargerText" parent="@style/WidgetText">
+        <item name="android:textSize">20sp</item>
     </style>
 </resources>

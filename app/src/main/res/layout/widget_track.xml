@@ -7,13 +7,14 @@
     <LinearLayout
         android:id="@+id/widget"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:padding="@dimen/widget_margin"
         android:background="@color/MaterialRed200" >
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="horizontal" >
 
             <ImageView
@@ -25,37 +26,36 @@
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/widget_track_margin"
                 android:orientation="vertical" >
 
                 <TextView
                     android:id="@+id/widget_track"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    style="@style/WidgetText" />
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="4"
+                    android:gravity="center"
+                    android:layout_gravity="center_horizontal"
+                    style="@style/WidgetLargerText" />
 
                 <TextView
                     android:id="@+id/widget_artist"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    style="@style/WidgetText" />
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="3"
+                    android:gravity="center"
+                    android:layout_gravity="center_horizontal"
+                    style="@style/WidgetLargerText" />
             </LinearLayout>
-
-            <TextView
-                android:id="@+id/widget_album"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                style="@style/WidgetText" />
         </LinearLayout>
 
         <TextView
             android:id="@+id/widget_mylastfm_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
             style="@style/WidgetAppText" />
     </LinearLayout>
 </FrameLayout>

@@ -3,4 +3,7 @@
     android:initialLayout="@layout/widget_track"
     android:minHeight="@dimen/widget_track_height"
     android:minWidth="@dimen/widget_track_width"
-    android:updatePeriodMillis="0" />
+    android:minResizeHeight="@dimen/widget_track_height"
+    android:minResizeWidth="@dimen/widget_track_width"
+    android:updatePeriodMillis="0"
+    android:resizeMode="vertical" />

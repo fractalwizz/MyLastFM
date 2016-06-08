@@ -75,7 +75,9 @@ public class MainActivity extends AppCompatActivity implements
         int defID = Integer.parseInt(preferences.getString("pref_startFragment", "6"));
 
         if (getIntent() != null && getIntent().hasExtra(ACTION_PLAYLIST)) {
+            Log.w("MA", "getIntent onCreate");
             defID = getIntent().getIntExtra(ACTION_PLAYLIST, 6);
+            getIntent().removeExtra(ACTION_PLAYLIST);
         }
 
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -177,12 +179,16 @@ public class MainActivity extends AppCompatActivity implements
         super.onRestart();
 
         if (getIntent() != null && getIntent().hasExtra(ACTION_PLAYLIST)) {
+            Log.w("MA", "getIntent onRestart");
             int id = getIntent().getIntExtra(ACTION_PLAYLIST, 6);
             Fragment fragment = TrackListFragment.newInstance(id, "", "");
 
             getSupportFragmentManager().beginTransaction()
                 .replace(R.id.container, fragment)
+                .addToBackStack((String) title)
                 .commit();
+
+            getIntent().removeExtra(ACTION_PLAYLIST);
         }
     }
 

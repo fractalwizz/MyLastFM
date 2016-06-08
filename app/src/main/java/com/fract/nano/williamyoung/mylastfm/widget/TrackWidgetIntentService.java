@@ -24,16 +24,14 @@ public class TrackWidgetIntentService extends IntentService {
     private static final String[] TRACK_COLUMNS = {
         TrackContract.TrackEntry._ID,
         TrackContract.TrackEntry.COLUMN_ARTiST,
-        TrackContract.TrackEntry.COLUMN_ALBUM,
         TrackContract.TrackEntry.COLUMN_TRACK,
         TrackContract.TrackEntry.COLUMN_COVER
     };
 
     private static final int INDEX_ID = 0;
     private static final int INDEX_ARTIST = 1;
-    private static final int INDEX_ALBUM = 2;
-    private static final int INDEX_TRACK = 3;
-    private static final int INDEX_COVER = 4;
+    private static final int INDEX_TRACK = 2;
+    private static final int INDEX_COVER = 3;
 
     private static final String ACTION_PLAYLIST = "action_playlist";
 
@@ -68,22 +66,30 @@ public class TrackWidgetIntentService extends IntentService {
         int id = data.getInt(INDEX_ID);
 
         String artist = data.getString(INDEX_ARTIST);
-        String album = data.getString(INDEX_ALBUM);
         String track = data.getString(INDEX_TRACK);
         String cover = data.getString(INDEX_COVER);
-        String coverDesc = album + " Cover Art";
+        String coverDesc = artist + " Cover Art";
+
+        data.close();
 
         String open = "Open in MyLastFM";
 
         for (int appWidgetId : appWidgetIds) {
-            int widgetLayout = R.layout.widget_track;
+            Bundle options = appWidgetManager.getAppWidgetOptions(appWidgetId);
+            int minHeight = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT);
+
+            int widgetLayout = R.layout.widget_track_small;
+
+            if (minHeight >= 80) { widgetLayout = R.layout.widget_track; }
 
             RemoteViews views = new RemoteViews(getPackageName(), widgetLayout);
 
             // set views
             views.setTextViewText(R.id.widget_track, track);
-            views.setTextViewText(R.id.widget_artist, artist);
-            views.setTextViewText(R.id.widget_album, album);
+            if (minHeight >= 80) {
+                views.setTextViewText(R.id.widget_artist, artist);
+                views.setTextViewText(R.id.widget_mylastfm_text, open);
+            }
 
             try {
                 Bitmap bitmap = Picasso.with(getApplicationContext()).load(cover).get();
@@ -96,13 +102,12 @@ public class TrackWidgetIntentService extends IntentService {
                 e.printStackTrace();
             }
 
-            views.setTextViewText(R.id.widget_mylastfm_text, open);
-
             // create click intent to application
-            // NOTE - works only when the application isn't running prior to click
+            // NOTE: click functionality is not consistent (depending on sequence of actions)
+            // Most often, works only when the application isn't running prior to click
             Intent launchIntent = new Intent(this, MainActivity.class);
             launchIntent.putExtra(ACTION_PLAYLIST, 6);
-            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, launchIntent, 0);
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, launchIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             views.setOnClickPendingIntent(R.id.widget, pendingIntent);
 
             appWidgetManager.updateAppWidget(appWidgetId, views);
