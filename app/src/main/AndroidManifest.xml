@@ -60,6 +60,20 @@
             android:authorities="@string/content_authority"
             android:name=".data.TrackProvider"
             android:exported="false" />
+
+        <receiver android:name=".widget.TrackWidgetProvider"
+            android:label="@string/widget_track">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.fract.nano.williamyoung.mylastfm.app.ACTION_DATA_UPDATED" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_info_track" />
+        </receiver>
+
+        <service android:name=".widget.TrackWidgetIntentService" />
     </application>
 
 </manifest>

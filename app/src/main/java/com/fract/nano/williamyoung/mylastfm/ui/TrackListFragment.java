@@ -60,6 +60,8 @@ public class TrackListFragment extends Fragment implements
     public static final String RESULT_VALUE = "resultValue";
     private static final String TRACK_LIST = "track_list";
 
+    public static final String ACTION_DATA_UPDATED = "com.fract.nano.williamyoung.mylastfm.app.ACTION_DATA_UPDATED";
+
     private int mFragID;
     private String mQueryOne;
     private String mQueryTwo;
@@ -109,12 +111,14 @@ public class TrackListFragment extends Fragment implements
             mQueryTwo = getArguments().getString(ARG_PARAM3);
         }
 
-        mLocationRequest = LocationRequest.create();
-        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
-            .addApi(LocationServices.API)
-            .addConnectionCallbacks(this)
-            .addOnConnectionFailedListener(this)
-            .build();
+        if (mFragID == 1) {
+            mLocationRequest = LocationRequest.create();
+            mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
+                .addApi(LocationServices.API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
+        }
 
         setupServiceReceiver();
     }
@@ -229,13 +233,13 @@ public class TrackListFragment extends Fragment implements
     @Override
     public void onStart() {
         super.onStart();
-        mGoogleApiClient.connect();
+        if (mFragID == 1) { mGoogleApiClient.connect(); }
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        if (mGoogleApiClient.isConnected()) {
+        if (mFragID == 1 && mGoogleApiClient.isConnected()) {
             mGoogleApiClient.disconnect();
         }
     }
@@ -276,6 +280,14 @@ public class TrackListFragment extends Fragment implements
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         mAdapter.swapCursor(data);
+        updateWidgets();
+    }
+
+    private void updateWidgets() {
+        Log.w("TrackLF", "updateWidgets");
+        Context context = getActivity().getApplicationContext();
+        Intent intent = new Intent(ACTION_DATA_UPDATED).setPackage(context.getPackageName());
+        context.sendBroadcast(intent);
     }
 
     /**

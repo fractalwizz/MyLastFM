@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements
     SearchFragment.OnSearchQueryListener {
 
     private static final String SINGLE_TRACK = "single_track";
+    private static final String ACTION_PLAYLIST = "action_playlist";
 
     Toolbar mToolbar;
     DrawerLayout mDrawer;
@@ -72,6 +73,10 @@ public class MainActivity extends AppCompatActivity implements
         // Default Fragment to be loaded
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         int defID = Integer.parseInt(preferences.getString("pref_startFragment", "6"));
+
+        if (getIntent() != null && getIntent().hasExtra(ACTION_PLAYLIST)) {
+            defID = getIntent().getIntExtra(ACTION_PLAYLIST, 6);
+        }
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         Fragment fragment = fragmentManager.findFragmentById(R.id.container);
@@ -164,6 +169,21 @@ public class MainActivity extends AppCompatActivity implements
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onRestart() {
+        Log.w("MA", "onRestart Called");
+        super.onRestart();
+
+        if (getIntent() != null && getIntent().hasExtra(ACTION_PLAYLIST)) {
+            int id = getIntent().getIntExtra(ACTION_PLAYLIST, 6);
+            Fragment fragment = TrackListFragment.newInstance(id, "", "");
+
+            getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container, fragment)
+                .commit();
+        }
     }
 
     /**
