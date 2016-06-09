@@ -21,7 +21,6 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -160,17 +159,17 @@ public class TrackListFragment extends Fragment implements
                     mTrackList = resultData.getParcelableArrayList(RESULT_VALUE);
 
                     if (mTrackList != null && mTrackList.size() > 0) {
-                        Log.w("setupSR", "Successfully acquired ArrayList of tracks: " + String.valueOf(mTrackList.size()));
+                        //Log.w("setupSR", "Successfully acquired ArrayList of tracks: " + String.valueOf(mTrackList.size()));
                         setupAdapter();
                     }
                 } else if (resultCode == Activity.RESULT_FIRST_USER) {
                     // no results found
-                    Log.w("setupSR", "No Results Found");
+                    //Log.w("setupSR", "No Results Found");
                     mErrorTextView.setVisibility(View.VISIBLE);
                     mErrorTextView.setText(getResources().getText(R.string.error_results));
                 } else if (resultCode == Activity.RESULT_CANCELED) {
                     // not connected
-                    Log.w("setupSR", "Device Not Connected");
+                    //Log.w("setupSR", "Device Not Connected");
                     mErrorTextView.setVisibility(View.VISIBLE);
                     mErrorTextView.setText(getResources().getText(R.string.error_connection));
                 }
@@ -311,7 +310,7 @@ public class TrackListFragment extends Fragment implements
         mAdapter.swapCursor(data);
 
         if (data == null || !data.moveToFirst()) {
-            Log.w("setupSR", "No Results Found");
+            //Log.w("setupSR", "No Results Found");
             mErrorTextView.setVisibility(View.VISIBLE);
             mErrorTextView.setText(getResources().getText(R.string.error_results));
         } else {
@@ -325,7 +324,7 @@ public class TrackListFragment extends Fragment implements
      * With a Content Provider data change, update Widgets with new data
      */
     private void updateWidgets() {
-        Log.w("TrackLF", "updateWidgets");
+        //Log.w("TrackLF", "updateWidgets");
         Context context = getActivity().getApplicationContext();
         Intent intent = new Intent(ACTION_DATA_UPDATED).setPackage(context.getPackageName());
         context.sendBroadcast(intent);
@@ -431,7 +430,7 @@ public class TrackListFragment extends Fragment implements
             try {
                 addressList = geoCoder.getFromLocation(lat, lon, 1);
             } catch (IOException e) {
-                Log.e("GetLocation", e.getMessage());
+                //Log.e("GetLocation", e.getMessage());
                 return "";
             }
 

@@ -13,7 +13,6 @@ import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -83,7 +82,7 @@ public class DetailTrackFragment extends Fragment {
                     mTrack = resultData.getParcelable(RESULT_VALUE);
                     updateViews();
                 } else if (resultCode == Activity.RESULT_CANCELED) {
-                    Log.w("detailSR", "Device Not Connected");
+                    //Log.w("detailSR", "Device Not Connected");
                     Snackbar.make(rootView, getString(R.string.detail_disconnected), Snackbar.LENGTH_LONG).show();
                 }
             }
@@ -225,23 +224,24 @@ public class DetailTrackFragment extends Fragment {
             );
 
         if (testTrack != null && testTrack.getCount() != 0) {
-            Log.w("DetailTF", "toAdd");
+            //Log.w("DetailTF", "toAdd");
             toAdd = false;
 
             mFab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_remove));
             mFab.setBackgroundTintList(ResourcesCompat.getColorStateList(getResources(), R.color.MaterialRed500, getActivity().getTheme()));
 
             testTrack.close();
-        } else {
-            Log.w("DetailTF", "notToAdd");
         }
+//        } else {
+//            Log.w("DetailTF", "notToAdd");
+//        }
     }
 
     /**
      * With a Content Provider data change, update Widgets with new data
      */
     private void updateWidgets() {
-        Log.w("MA", "updateWidgets");
+        //Log.w("MA", "updateWidgets");
         Context context = getActivity().getApplicationContext();
         Intent intent = new Intent(ACTION_DATA_UPDATED).setPackage(context.getPackageName());
         context.sendBroadcast(intent);

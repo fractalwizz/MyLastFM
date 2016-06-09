@@ -9,7 +9,6 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.os.ResultReceiver;
-import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -84,7 +83,7 @@ public class DetailService extends IntentService {
                 .build();
 
             URL url = new URL(builtUri.toString());
-            Log.w("DetailService", builtUri.toString());
+            //Log.w("DetailService", builtUri.toString());
 
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("GET");
@@ -103,7 +102,7 @@ public class DetailService extends IntentService {
             if (buffer.length() == 0) { return; }
             trackJsonStr = buffer.toString();
         } catch (IOException e) {
-            Log.e(LOG_TAG, "ERROR: ", e);
+            //Log.e(LOG_TAG, "ERROR: ", e);
         } finally {
             if (urlConnection != null) { urlConnection.disconnect(); }
 
@@ -111,7 +110,7 @@ public class DetailService extends IntentService {
                 try {
                     reader.close();
                 } catch (final IOException e) {
-                    Log.e(LOG_TAG, "ERROR closing stream: ", e);
+                    //Log.e(LOG_TAG, "ERROR closing stream: ", e);
                 }
             }
         }
@@ -119,7 +118,7 @@ public class DetailService extends IntentService {
         try {
             getTrackDetailsFromJson(trackJsonStr);
         } catch (JSONException e) {
-            Log.e(LOG_TAG, e.getMessage(), e);
+            //Log.e(LOG_TAG, e.getMessage(), e);
             e.printStackTrace();
         }
     }

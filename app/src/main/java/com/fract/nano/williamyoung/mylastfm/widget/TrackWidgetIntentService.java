@@ -10,7 +10,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.RemoteViews;
 
 import com.fract.nano.williamyoung.mylastfm.R;
@@ -54,10 +53,10 @@ public class TrackWidgetIntentService extends IntentService {
         );
 
         if (data == null) {
-            Log.w("WidgetIntent", "Data is null");
+            //Log.w("WidgetIntent", "Data is null");
             return;
         } else if (!data.moveToFirst()) {
-            Log.w("WidgetIntent", "Data has no rows");
+            //Log.w("WidgetIntent", "Data has no rows");
             data.close();
             return;
         }

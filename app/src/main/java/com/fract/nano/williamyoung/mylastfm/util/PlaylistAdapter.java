@@ -48,16 +48,6 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.TrackV
         this.mContext = context;
     }
 
-    /**
-     * Constructor with Cursor included
-     * @param context : Activity/Fragment context
-     * @param cursor  : Cursor of Track data
-     */
-    public PlaylistAdapter(Context context, Cursor cursor) {
-        this.mCursor = cursor;
-        this.mContext = context;
-    }
-
     @Override
     public TrackViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.list_track_item, viewGroup, false);
@@ -88,8 +78,6 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.TrackV
     public int getItemCount() {
         return (null != mCursor) ? mCursor.getCount() : 0;
     }
-
-    public Cursor getCursor() { return mCursor; }
 
     public void swapCursor(Cursor newCursor) {
         mCursor = newCursor;

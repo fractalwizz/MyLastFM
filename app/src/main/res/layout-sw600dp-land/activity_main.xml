@@ -70,20 +70,6 @@
                     android:layout_marginEnd="@dimen/tablet_margin_end"
                     app:layout_behavior="@string/appbar_scrolling_view_behavior" />
             </LinearLayout>
-
-            <!--<FrameLayout-->
-                <!--android:id="@+id/container"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginStart="@dimen/activity_horizontal_margin"-->
-                <!--app:layout_behavior="@string/appbar_scrolling_view_behavior" />-->
-
-            <!--<FrameLayout-->
-                <!--android:id="@+id/detail_container"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginEnd="@dimen/activity_horizontal_margin"-->
-                <!--app:layout_behavior="@string/appbar_scrolling_view_behavior" />-->
         </android.support.design.widget.CoordinatorLayout>
     </RelativeLayout>
 

@@ -17,7 +17,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -77,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements
         int defID = Integer.parseInt(preferences.getString("pref_startFragment", "6"));
 
         if (getIntent() != null && getIntent().hasExtra(ACTION_PLAYLIST)) {
-            Log.w("MA", "getIntent onCreate");
+            //Log.w("MA", "getIntent onCreate");
             defID = getIntent().getIntExtra(ACTION_PLAYLIST, 6);
             getIntent().removeExtra(ACTION_PLAYLIST);
         }
@@ -97,10 +96,10 @@ public class MainActivity extends AppCompatActivity implements
 
         if (findViewById(R.id.detail_container) != null) {
             mTwoPane = true;
-            Log.w("MainActivity", "Choosing dual-pane");
+            //Log.w("MainActivity", "Choosing dual-pane");
 
             if (savedInstanceState == null) {
-                Log.w("MainActivity", "setup blank detail");
+                //Log.w("MainActivity", "setup blank detail");
 
                 DetailTrackFragment frag = new DetailTrackFragment();
                 getSupportFragmentManager().beginTransaction()
@@ -109,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements
             }
         } else {
             mTwoPane = false;
-            Log.w("MainActivity", "Single-pane");
+            //Log.w("MainActivity", "Single-pane");
         }
 
         mNavigation = (NavigationView) findViewById(R.id.nav_view);
@@ -127,9 +126,9 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onNewIntent(Intent intent) {
-        Log.w("MA", "onNewIntent");
+        //Log.w("MA", "onNewIntent");
         if (intent != null && intent.hasExtra(ACTION_PLAYLIST)) {
-            Log.w("MA", "onNewIntent hasExtra");
+            //Log.w("MA", "onNewIntent hasExtra");
             setIntent(intent);
         }
     }
@@ -190,7 +189,7 @@ public class MainActivity extends AppCompatActivity implements
      * With a Content Provider data change, update Widgets with new data
      */
     private void updateWidgets() {
-        Log.w("MA", "updateWidgets");
+        //Log.w("MA", "updateWidgets");
         Context context = getApplicationContext();
         Intent intent = new Intent(ACTION_DATA_UPDATED).setPackage(context.getPackageName());
         context.sendBroadcast(intent);
@@ -198,11 +197,11 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onRestart() {
-        Log.w("MA", "onRestart Called");
+        //Log.w("MA", "onRestart Called");
         super.onRestart();
 
         if (getIntent() != null && getIntent().hasExtra(ACTION_PLAYLIST)) {
-            Log.w("MA", "getIntent onRestart");
+            //Log.w("MA", "getIntent onRestart");
             int id = getIntent().getIntExtra(ACTION_PLAYLIST, 6);
             Fragment fragment = TrackListFragment.newInstance(id, "", "");
 

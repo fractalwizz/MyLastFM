@@ -156,7 +156,7 @@ public class TrackService extends IntentService {
             }
 
             URL url = new URL(builtUri.toString());
-            Log.w("TrackService", builtUri.toString());
+            //Log.w("TrackService", builtUri.toString());
 
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("GET");
@@ -183,7 +183,7 @@ public class TrackService extends IntentService {
                 try {
                     reader.close();
                 } catch (final IOException e) {
-                    Log.e(LOG_TAG, "ERROR closing stream: ", e);
+                    //Log.e(LOG_TAG, "ERROR closing stream: ", e);
                 }
             }
         }
@@ -208,7 +208,7 @@ public class TrackService extends IntentService {
                     break;
             }
         } catch (JSONException e) {
-            Log.e(LOG_TAG, e.getMessage(), e);
+            //Log.e(LOG_TAG, e.getMessage(), e);
             e.printStackTrace();
         }
     }
