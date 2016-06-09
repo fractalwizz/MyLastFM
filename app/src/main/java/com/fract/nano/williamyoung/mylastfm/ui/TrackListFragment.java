@@ -25,6 +25,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.fract.nano.williamyoung.mylastfm.R;
@@ -210,7 +211,30 @@ public class TrackListFragment extends Fragment implements
              */
             @Override
             public void onItemClick(Track track, View v) {
-                ((Callback) getActivity()).onItemSelected(track, v);
+                // Delete button pressed
+                // Delete from ContentProvider + restartLoader
+                if (v instanceof ImageView) {
+                    Uri uri = TrackContract.TrackEntry.CONTENT_URI;
+                    String selection = TrackContract.TrackEntry.COLUMN_ARTiST
+                        + "=? AND "
+                        + TrackContract.TrackEntry.COLUMN_ALBUM
+                        + "=? AND "
+                        + TrackContract.TrackEntry.COLUMN_TRACK
+                        + "=?";
+
+                    getActivity().getContentResolver().delete(uri,
+                        selection,
+                        new String[]{
+                            track.getArtist(),
+                            track.getAlbum(),
+                            track.getTrackName()
+                        }
+                    );
+
+                    onResume();
+                } else {
+                    ((Callback) getActivity()).onItemSelected(track, v);
+                }
             }
         });
         mRecyclerView.setAdapter(mAdapter);

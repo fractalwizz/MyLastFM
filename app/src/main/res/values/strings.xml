@@ -19,6 +19,7 @@
     <!-- TrackListFragment -->
     <string name="track_list_name" translatable="false">TrackListFragment</string>
     <string name="empty" translatable="false"> </string>
+    <string name="delete_button">Delete Track from Playlist</string>
     <string name="error_results">No Track Results Available.</string>
     <string name="error_connection">No Track Results Available. The Network is not available to fetch track data.</string>
 

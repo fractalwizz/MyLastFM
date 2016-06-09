@@ -80,12 +80,14 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.TrackViewHol
         protected ImageView imageView;
         protected TextView trackTextView;
         protected TextView artistTextView;
+        protected ImageView deleteButton;
 
         public TrackViewHolder(View view) {
             super(view);
             this.imageView = (ImageView) view.findViewById(R.id.imageView);
             this.trackTextView = (TextView) view.findViewById(R.id.trackText);
             this.artistTextView = (TextView) view.findViewById(R.id.artistText);
+            this.deleteButton = (ImageView) view.findViewById(R.id.deleteButton);
             view.setOnClickListener(this);
         }
 

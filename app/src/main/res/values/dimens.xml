@@ -13,8 +13,12 @@
     <dimen name="list_item_height">90dp</dimen>
 
     <!-- List Item Dimen -->
+    <dimen name="list_item_image_size">70dp</dimen>
     <dimen name="list_item_padding">10dp</dimen>
     <dimen name="image_end_padding">8dp</dimen>
+    <dimen name="item_track_margin">48dp</dimen>
+    <dimen name="delete_button_width">40dp</dimen>
+    <dimen name="delete_button_height">60dp</dimen>
 
     <!-- Search Interface -->
     <dimen name="search_query_top_padding">8dp</dimen>
