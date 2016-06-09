@@ -91,15 +91,17 @@ public class TrackWidgetIntentService extends IntentService {
                 views.setTextViewText(R.id.widget_mylastfm_text, open);
             }
 
-            try {
-                Bitmap bitmap = Picasso.with(getApplicationContext()).load(cover).get();
-                views.setImageViewBitmap(R.id.widget_cover, bitmap);
+            if (cover.contains("http")) {
+                try {
+                    Bitmap bitmap = Picasso.with(getApplicationContext()).load(cover).get();
+                    views.setImageViewBitmap(R.id.widget_cover, bitmap);
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
-                    views.setContentDescription(R.id.widget_cover, coverDesc);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
+                        views.setContentDescription(R.id.widget_cover, coverDesc);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
             }
 
             // create click intent to application

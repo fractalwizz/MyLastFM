@@ -25,7 +25,7 @@
                 android:contentDescription="@string/empty" />
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginStart="@dimen/widget_track_margin"
                 android:orientation="vertical" >
@@ -54,7 +54,7 @@
             android:id="@+id/widget_mylastfm_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
+            android:layout_gravity="center"
             android:gravity="center"
             style="@style/WidgetAppText" />
     </LinearLayout>

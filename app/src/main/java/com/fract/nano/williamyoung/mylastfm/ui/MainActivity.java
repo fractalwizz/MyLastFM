@@ -1,5 +1,6 @@
 package com.fract.nano.williamyoung.mylastfm.ui;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -36,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private static final String SINGLE_TRACK = "single_track";
     private static final String ACTION_PLAYLIST = "action_playlist";
+    public static final String ACTION_DATA_UPDATED = "com.fract.nano.williamyoung.mylastfm.app.ACTION_DATA_UPDATED";
 
     Toolbar mToolbar;
     DrawerLayout mDrawer;
@@ -164,6 +166,8 @@ public class MainActivity extends AppCompatActivity implements
                                 null,
                                 null
                             );
+
+                            updateWidgets();
                         }
 
                         Toast.makeText(getApplicationContext(), "Playlist Cleared", Toast.LENGTH_SHORT).show();
@@ -180,6 +184,16 @@ public class MainActivity extends AppCompatActivity implements
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * With a Content Provider data change, update Widgets with new data
+     */
+    private void updateWidgets() {
+        Log.w("MA", "updateWidgets");
+        Context context = getApplicationContext();
+        Intent intent = new Intent(ACTION_DATA_UPDATED).setPackage(context.getPackageName());
+        context.sendBroadcast(intent);
     }
 
     @Override

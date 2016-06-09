@@ -32,6 +32,7 @@ import com.squareup.picasso.Picasso;
 public class DetailTrackFragment extends Fragment {
     private static final String SINGLE_TRACK = "single_track";
     public static final String RESULT_VALUE = "resultValue";
+    public static final String ACTION_DATA_UPDATED = "com.fract.nano.williamyoung.mylastfm.app.ACTION_DATA_UPDATED";
 
     private View rootView;
 
@@ -168,6 +169,8 @@ public class DetailTrackFragment extends Fragment {
                     Uri uri = TrackContract.TrackEntry.CONTENT_URI;
                     getActivity().getContentResolver().insert(uri, values);
 
+                    updateWidgets();
+
                     // Change FAB
                     mFab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_remove));
                     mFab.setBackgroundTintList(ResourcesCompat.getColorStateList(getResources(), R.color.MaterialRed500, getActivity().getTheme()));
@@ -190,6 +193,9 @@ public class DetailTrackFragment extends Fragment {
                             mTrack.getTrackName()
                         }
                     );
+
+                    updateWidgets();
+
                     // Change FAB back
                     mFab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_add));
                     mFab.setBackgroundTintList(ResourcesCompat.getColorStateList(getResources(), R.color.MaterialLightGreen500, getActivity().getTheme()));
@@ -229,6 +235,16 @@ public class DetailTrackFragment extends Fragment {
         } else {
             Log.w("DetailTF", "notToAdd");
         }
+    }
+
+    /**
+     * With a Content Provider data change, update Widgets with new data
+     */
+    private void updateWidgets() {
+        Log.w("MA", "updateWidgets");
+        Context context = getActivity().getApplicationContext();
+        Intent intent = new Intent(ACTION_DATA_UPDATED).setPackage(context.getPackageName());
+        context.sendBroadcast(intent);
     }
 
     @Override

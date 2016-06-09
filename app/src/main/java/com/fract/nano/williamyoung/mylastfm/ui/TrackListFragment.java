@@ -249,12 +249,17 @@ public class TrackListFragment extends Fragment implements
         // Don't immediately updateTrack if GEO info needed or data from ContentProvider
         if (mFragID != 1 && mFragID != 6 && mTrackList == null) { updateTrack(); }
 
-        // Initialize CursorLoader
-        if (mFragID == 6) {
-            getLoaderManager().initLoader(my_loader_id, null, this);
-        }
-
         super.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        // Initialize or re-initialize Playlist
+        if (mFragID == 6) {
+            getLoaderManager().restartLoader(my_loader_id, null, this);
+        }
     }
 
     /**
@@ -280,9 +285,21 @@ public class TrackListFragment extends Fragment implements
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         mAdapter.swapCursor(data);
+
+        if (data == null || !data.moveToFirst()) {
+            Log.w("setupSR", "No Results Found");
+            mErrorTextView.setVisibility(View.VISIBLE);
+            mErrorTextView.setText(getResources().getText(R.string.error_results));
+        } else {
+            mErrorTextView.setVisibility(View.INVISIBLE);
+        }
+
         updateWidgets();
     }
 
+    /**
+     * With a Content Provider data change, update Widgets with new data
+     */
     private void updateWidgets() {
         Log.w("TrackLF", "updateWidgets");
         Context context = getActivity().getApplicationContext();
