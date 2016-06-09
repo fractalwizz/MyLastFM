@@ -103,8 +103,6 @@ public class TrackWidgetIntentService extends IntentService {
             }
 
             // create click intent to application
-            // NOTE: click functionality is not consistent (depending on sequence of actions)
-            // Most often, works only when the application isn't running prior to click
             Intent launchIntent = new Intent(this, MainActivity.class);
             launchIntent.putExtra(ACTION_PLAYLIST, 6);
             PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, launchIntent, PendingIntent.FLAG_UPDATE_CURRENT);

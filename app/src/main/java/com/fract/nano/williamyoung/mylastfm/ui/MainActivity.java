@@ -124,6 +124,15 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
+    public void onNewIntent(Intent intent) {
+        Log.w("MA", "onNewIntent");
+        if (intent != null && intent.hasExtra(ACTION_PLAYLIST)) {
+            Log.w("MA", "onNewIntent hasExtra");
+            setIntent(intent);
+        }
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
@@ -186,7 +195,7 @@ public class MainActivity extends AppCompatActivity implements
             getSupportFragmentManager().beginTransaction()
                 .replace(R.id.container, fragment)
                 .addToBackStack((String) title)
-                .commit();
+                .commitAllowingStateLoss();
 
             getIntent().removeExtra(ACTION_PLAYLIST);
         }

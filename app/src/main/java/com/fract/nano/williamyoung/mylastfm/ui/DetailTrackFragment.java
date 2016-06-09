@@ -95,8 +95,15 @@ public class DetailTrackFragment extends Fragment {
     private void updateViews() {
         int iS = getResources().getInteger(R.integer.image_size);
 
+        Button mBandButton = (Button) rootView.findViewById(R.id.band_url_button);
+        final FloatingActionButton mFab = (FloatingActionButton) rootView.findViewById(R.id.add_fab);
+
         // two-pane mode and fragment without track
-        if (mTrack == null) { return; }
+        if (mTrack == null) {
+            mBandButton.setVisibility(View.INVISIBLE);
+            mFab.setVisibility(View.INVISIBLE);
+            return;
+        }
 
         ImageView mTrackImageView = (ImageView) rootView.findViewById(R.id.track_image_view);
         Picasso.with(getActivity())
@@ -130,7 +137,7 @@ public class DetailTrackFragment extends Fragment {
         TextView mAlbumTextView = (TextView) rootView.findViewById(R.id.detail_text_album);
         mAlbumTextView.setText(String.format(getString(R.string.format_album), mTrack.getAlbum()));
 
-        Button mBandButton = (Button) rootView.findViewById(R.id.band_url_button);
+        mBandButton.setVisibility(View.VISIBLE);
         mBandButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -141,7 +148,7 @@ public class DetailTrackFragment extends Fragment {
             }
         });
 
-        final FloatingActionButton mFab = (FloatingActionButton) rootView.findViewById(R.id.add_fab);
+        mFab.setVisibility(View.VISIBLE);
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -238,7 +245,7 @@ public class DetailTrackFragment extends Fragment {
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        if (mTrack.getAlbum().equals("") || mTrack.getAlbumCover().equals("") || mTrack.getLength() == 0) {
+        if (mTrack != null && (mTrack.getAlbum().equals("") || mTrack.getAlbumCover().equals("") || mTrack.getLength() == 0)) {
             updateTrack();
         }
         super.onActivityCreated(savedInstanceState);
