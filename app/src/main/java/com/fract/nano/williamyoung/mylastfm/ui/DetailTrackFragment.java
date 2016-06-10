@@ -184,6 +184,7 @@ public class DetailTrackFragment extends Fragment {
                         + TrackContract.TrackEntry.COLUMN_TRACK
                         + "=?";
 
+                    // TODO - Background Thread
                     getActivity().getContentResolver().delete(uri,
                         selection,
                         new String[]{
@@ -256,7 +257,7 @@ public class DetailTrackFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        getActivity().setTitle("Track Detail");
+        getActivity().setTitle(getString(R.string.detail_frag_name));
     }
 
     @Override

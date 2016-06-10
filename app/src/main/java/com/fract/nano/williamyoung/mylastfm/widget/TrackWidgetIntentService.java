@@ -67,11 +67,11 @@ public class TrackWidgetIntentService extends IntentService {
         String artist = data.getString(INDEX_ARTIST);
         String track = data.getString(INDEX_TRACK);
         String cover = data.getString(INDEX_COVER);
-        String coverDesc = artist + " Cover Art";
+        String coverDesc = getString(R.string.widget_cover_desc, artist);
 
         data.close();
 
-        String open = "Open in MyLastFM";
+        String open = getString(R.string.widget_open);
 
         for (int appWidgetId : appWidgetIds) {
             Bundle options = appWidgetManager.getAppWidgetOptions(appWidgetId);

@@ -153,8 +153,8 @@ public class MainActivity extends AppCompatActivity implements
             return true;
         } else if (id == R.id.action_clear) {
             new AlertDialog.Builder(this)
-                .setTitle("Clear My Playlist")
-                .setMessage("Are you sure you want to clear My Playlist?")
+                .setTitle(getString(R.string.main_alert_title))
+                .setMessage(getString(R.string.main_alert_message))
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -169,7 +169,7 @@ public class MainActivity extends AppCompatActivity implements
                             updateWidgets();
                         }
 
-                        Toast.makeText(getApplicationContext(), "Playlist Cleared", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), getString(R.string.main_alert_cleared), Toast.LENGTH_SHORT).show();
                     }
                 })
                 .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {

@@ -158,6 +158,7 @@ public class TrackService extends IntentService {
             URL url = new URL(builtUri.toString());
             //Log.w("TrackService", builtUri.toString());
 
+            // TODO - Research backend/networking libraries
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("GET");
             urlConnection.connect();

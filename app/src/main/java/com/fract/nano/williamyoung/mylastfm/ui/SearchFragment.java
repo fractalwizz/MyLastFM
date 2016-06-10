@@ -79,7 +79,7 @@ public class SearchFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (queryOne.equals("") || (fragID == 5 && queryTwo.equals(""))) {
-                    Snackbar.make(view, "Please enter a search query.", Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(view, getString(R.string.search_please), Snackbar.LENGTH_LONG).show();
                 } else {
                     mListener.onSearchQuery(fragID, queryOne.trim(), queryTwo.trim());
                 }
@@ -135,7 +135,7 @@ public class SearchFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        getActivity().setTitle("Search LastFM");
+        getActivity().setTitle(getString(R.string.search_frag_name));
 
         if (context instanceof OnSearchQueryListener) {
             mListener = (OnSearchQueryListener) context;

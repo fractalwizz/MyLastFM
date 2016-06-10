@@ -85,6 +85,7 @@ public class DetailService extends IntentService {
             URL url = new URL(builtUri.toString());
             //Log.w("DetailService", builtUri.toString());
 
+            // TODO - Research backend/networking libraries
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("GET");
             urlConnection.connect();

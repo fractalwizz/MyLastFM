@@ -16,6 +16,11 @@
     <string name="nav_search">Search</string>
     <string name="nav_playlist">My Playlist</string>
 
+    <!-- MainActivity -->
+    <string name="main_alert_title">Clear My Playlist</string>
+    <string name="main_alert_message">Are you sure you want to clear My Playlist?</string>
+    <string name="main_alert_cleared">Playlist Cleared</string>
+
     <!-- TrackListFragment -->
     <string name="track_list_name" translatable="false">TrackListFragment</string>
     <string name="empty" translatable="false"> </string>
@@ -30,6 +35,7 @@
     <string name="pref_clear_all">Clear My Playlist</string>
 
     <!-- Search Layout -->
+    <string name="search_frag_name">Search LastFM</string>
     <string name="search_name">Search Parameters</string>
     <string name="search_tag">By Tag</string>
     <string name="search_artist">By Artist</string>
@@ -38,18 +44,25 @@
     <string name="search_button">Initiate Search</string>
     <string name="input_one_hint">Tag/Artist/Track</string>
     <string name="input_two_hint">Album</string>
+    <string name="search_please">Please enter a search query.</string>
 
     <!-- Detail Track Activity -->
     <string name="title_activity_detail_track">DetailTrackActivity</string>
+    <string name="detail_frag_name">Track Detail</string>
     <string name="format_artist">Artist: %1$s</string>
     <string name="format_album">Album: %1$s</string>
     <string name="detail_disconnected">Network not available. Details may be incomplete.</string>
     <string name="band_button">Artist Page on Last.FM</string>
     <string name="action_add">Add Track</string>
 
+    <!-- Utility -->
+    <string name="band_url_format" translatable="false">http://www.last.fm/music/%1$s</string>
+
     <!-- ContentProvider -->
     <string name="content_authority" translatable="false">com.fract.nano.williamyoung.mylastfm</string>
 
     <!-- Widget -->
     <string name="widget_track">MyLastFM Track Widget</string>
+    <string name="widget_cover_desc">%1$s Cover Art</string>
+    <string name="widget_open">Open in MyLastFM</string>
 </resources>

@@ -4,6 +4,8 @@ import android.content.Context;
 
 import com.fract.nano.williamyoung.mylastfm.R;
 
+import java.util.Locale;
+
 public class Utility {
     /**
      * Returns API Key for the Last.FM API
@@ -17,5 +19,7 @@ public class Utility {
      * @param band : Band name
      * @return : Last.FM URL
      */
-    public static String getBandURL(String band) { return "http://www.last.fm/music/" + band; }
+    public static String getBandURL(String band) {
+        return String.format(Locale.getDefault(), band, R.string.band_url_format);
+    }
 }

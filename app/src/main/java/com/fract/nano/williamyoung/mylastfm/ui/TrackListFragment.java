@@ -221,6 +221,7 @@ public class TrackListFragment extends Fragment implements
                         + TrackContract.TrackEntry.COLUMN_TRACK
                         + "=?";
 
+                    // TODO - Background Thread
                     getActivity().getContentResolver().delete(uri,
                         selection,
                         new String[]{
@@ -250,7 +251,7 @@ public class TrackListFragment extends Fragment implements
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        getActivity().setTitle("MyLastFM");
+        getActivity().setTitle(getString(R.string.app_name));
     }
 
     @Override
@@ -391,8 +392,15 @@ public class TrackListFragment extends Fragment implements
 
                 if (result == PackageManager.PERMISSION_GRANTED) {
                     Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-                    mLatitude = location.getLatitude();
-                    mLongitude = location.getLongitude();
+                    if (location != null) {
+                        mLatitude = location.getLatitude();
+                        mLongitude = location.getLongitude();
+                    } else {
+                        mErrorTextView.setVisibility(View.VISIBLE);
+                        mErrorTextView.setText(getResources().getText(R.string.error_results));
+
+                        return;
+                    }
 
                     new GetLocationTask().execute(mLatitude, mLongitude);
                 }
