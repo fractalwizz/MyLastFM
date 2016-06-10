@@ -16,7 +16,7 @@ android {
     }
     signingConfigs {
         release {
-            storeFile file("app/capstoneKey.jks")
+            storeFile file("capstoneKey.jks")
             storePassword "password"
             keyAlias "fractalwizz_capstone"
             keyPassword "password"
