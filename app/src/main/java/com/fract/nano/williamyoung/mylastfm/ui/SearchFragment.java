@@ -2,6 +2,7 @@ package com.fract.nano.williamyoung.mylastfm.ui;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -26,12 +27,13 @@ public class SearchFragment extends Fragment {
 
     public SearchFragment() {}
 
+    // TODO - Utilize ButterKnife
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_search, container, false);
 
         // setup first Text field
-        EditText oneText = (EditText) view.findViewById(R.id.query_one_edit);
+        EditText oneText = view.findViewById(R.id.query_one_edit);
         oneText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -44,20 +46,20 @@ public class SearchFragment extends Fragment {
         });
 
         // RadioButtons and clicks
-        RadioButton radioTag = (RadioButton) view.findViewById(R.id.radio_tag);
+        RadioButton radioTag = view.findViewById(R.id.radio_tag);
         radioTag.setOnClickListener(mClickListener);
 
-        RadioButton radioArtist = (RadioButton) view.findViewById(R.id.radio_artist);
+        RadioButton radioArtist = view.findViewById(R.id.radio_artist);
         radioArtist.setOnClickListener(mClickListener);
 
-        RadioButton radioTrack = (RadioButton) view.findViewById(R.id.radio_track);
+        RadioButton radioTrack = view.findViewById(R.id.radio_track);
         radioTrack.setOnClickListener(mClickListener);
 
-        RadioButton radioArtAlb = (RadioButton) view.findViewById(R.id.radio_artalb);
+        RadioButton radioArtAlb = view.findViewById(R.id.radio_artalb);
         radioArtAlb.setOnClickListener(mClickListener);
 
         // setup second Text field
-        twoText = (EditText) view.findViewById(R.id.query_two_edit);
+        twoText = view.findViewById(R.id.query_two_edit);
         twoText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -70,19 +72,13 @@ public class SearchFragment extends Fragment {
         });
 
         // Search query button - initiates searchQuery
-        Button mButton = (Button) view.findViewById(R.id.search_button);
-        mButton.setOnClickListener(new View.OnClickListener() {
-            /**
-             * Send query details back to MainActivity for Fragment initialization
-             * @param v : v
-             */
-            @Override
-            public void onClick(View v) {
-                if (queryOne.equals("") || (fragID == 5 && queryTwo.equals(""))) {
-                    Snackbar.make(view, getString(R.string.search_please), Snackbar.LENGTH_LONG).show();
-                } else {
-                    mListener.onSearchQuery(fragID, queryOne.trim(), queryTwo.trim());
-                }
+        // Send query details back to MainActivity for Fragment initialization
+        Button mButton = view.findViewById(R.id.search_button);
+        mButton.setOnClickListener(v -> {
+            if (queryOne.equals("") || (fragID == 5 && queryTwo.equals(""))) {
+                Snackbar.make(view, SearchFragment.this.getString(R.string.search_please), Snackbar.LENGTH_LONG).show();
+            } else {
+                mListener.onSearchQuery(fragID, queryOne.trim(), queryTwo.trim());
             }
         });
 

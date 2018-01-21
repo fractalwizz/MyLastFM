@@ -3,7 +3,7 @@ package com.fract.nano.williamyoung.mylastfm.util;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.os.ResultReceiver;
+import android.os.ResultReceiver;
 
 @SuppressLint("ParcelCreator")
 public class TrackReceiver extends ResultReceiver {

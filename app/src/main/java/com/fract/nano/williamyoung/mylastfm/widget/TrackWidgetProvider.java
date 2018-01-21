@@ -10,7 +10,7 @@ import android.support.annotation.NonNull;
 import com.fract.nano.williamyoung.mylastfm.ui.TrackListFragment;
 
 public class TrackWidgetProvider extends AppWidgetProvider {
-    private final String LOG_TAG = TrackWidgetProvider.class.getSimpleName();
+    //private final String LOG_TAG = TrackWidgetProvider.class.getSimpleName();
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         //Log.w(LOG_TAG, "onUpdate called");

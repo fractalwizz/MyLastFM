@@ -58,7 +58,7 @@
                     android:background="@color/MaterialGrey700"
                     android:layout_width="2dp"
                     android:layout_height="match_parent"
-                    android:minHeight="2dp"/>
+                    android:minHeight="2dp" />
 
                 <FrameLayout
                     android:id="@+id/detail_container"

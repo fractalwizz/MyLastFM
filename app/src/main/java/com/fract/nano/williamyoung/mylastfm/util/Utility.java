@@ -9,6 +9,7 @@ import java.util.Locale;
 public class Utility {
     /**
      * Returns API Key for the Last.FM API
+     *
      * @param context : Activity/Fragment context
      * @return API key string
      */
@@ -16,6 +17,7 @@ public class Utility {
 
     /**
      * gets formatted Band Last.FM URL
+     *
      * @param band : Band name
      * @return : Last.FM URL
      */

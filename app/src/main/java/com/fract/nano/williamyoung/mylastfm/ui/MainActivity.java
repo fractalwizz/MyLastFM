@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -29,6 +30,7 @@ import com.fract.nano.williamyoung.mylastfm.util.Track;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
+// TODO - Consider moving Fragment-to-Fragment logic out of MainActivity (?)
 public class MainActivity extends AppCompatActivity implements
     TrackListFragment.Callback,
     NavigationView.OnNavigationItemSelectedListener,
@@ -47,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements
     // Used to store the last screen title
     private CharSequence title;
 
+    // TODO - utilize ButterKnife (?)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,10 +57,10 @@ public class MainActivity extends AppCompatActivity implements
 
         mHelper = new TrackHelper(this);
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
 
-        mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, mDrawer, mToolbar, R.string.nav_open, R.string.nav_close);
         title = getTitle();
 
@@ -65,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements
         toggle.syncState();
 
         // Sets up AdMob View at bottom of MainActivity
-        AdView mAdView = (AdView) findViewById(R.id.adView);
+        AdView mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder()
             .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
             .build();
@@ -111,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements
             //Log.w("MainActivity", "Single-pane");
         }
 
-        mNavigation = (NavigationView) findViewById(R.id.nav_view);
+        mNavigation = findViewById(R.id.nav_view);
         if (mNavigation != null) { mNavigation.setNavigationItemSelectedListener(this); }
     }
 
@@ -155,27 +158,21 @@ public class MainActivity extends AppCompatActivity implements
             new AlertDialog.Builder(this)
                 .setTitle(getString(R.string.main_alert_title))
                 .setMessage(getString(R.string.main_alert_message))
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        SQLiteDatabase db = mHelper.getWritableDatabase();
+                .setPositiveButton(android.R.string.yes, (dialog, which) -> {
+                    SQLiteDatabase db = mHelper.getWritableDatabase();
 
-                        if (db != null) {
-                            db.delete(TrackContract.TrackEntry.TABLE_NAME,
-                                null,
-                                null
-                            );
+                    if (db != null) {
+                        db.delete(TrackContract.TrackEntry.TABLE_NAME,
+                            null,
+                            null
+                        );
 
-                            updateWidgets();
-                        }
-
-                        Toast.makeText(getApplicationContext(), getString(R.string.main_alert_cleared), Toast.LENGTH_SHORT).show();
+                        updateWidgets();
                     }
+
+                    Toast.makeText(getApplicationContext(), getString(R.string.main_alert_cleared), Toast.LENGTH_SHORT).show();
                 })
-                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {}
-                })
+                .setNegativeButton(android.R.string.no, (dialog, which) -> {})
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
 
@@ -221,7 +218,7 @@ public class MainActivity extends AppCompatActivity implements
      * @return : success(?)
      */
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         FragmentManager fragmentManager = getSupportFragmentManager();

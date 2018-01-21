@@ -12,14 +12,15 @@ import com.google.android.gms.ads.AdView;
 public class DetailTrackActivity extends AppCompatActivity {
     private static final String SINGLE_TRACK = "single_track";
 
+    // TODO - Utilize ButterKnife (?)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_track);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
 
         // Sets up AdMob View at bottom of DetailTrackActivity
-        AdView mAdView = (AdView) findViewById(R.id.adDetailView);
+        AdView mAdView = findViewById(R.id.adDetailView);
         AdRequest adRequest = new AdRequest.Builder()
             .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
             .build();
@@ -48,9 +49,7 @@ public class DetailTrackActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.home) {
-            finish();
-        }
+        if (id == R.id.home) { finish(); }
 
         return super.onOptionsItemSelected(item);
     }

@@ -3,14 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.SearchFragment">
+    tools:context=".ui.SearchFragment" >
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:text="@string/search_name"
         android:paddingTop="@dimen/search_query_top_padding"
-        style="@style/SearchText"/>
+        style="@style/SearchText" />
 
     <EditText
         android:id="@+id/query_one_edit"

@@ -123,15 +123,16 @@ public class TrackListFragment extends Fragment implements
         setupServiceReceiver();
     }
 
+    // TODO - Utilize ButterKnife (?)
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_track_list, container, false);
 
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerview);
+        mRecyclerView = view.findViewById(R.id.recyclerview);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
 
-        mErrorTextView = (TextView) view.findViewById(R.id.error_text);
+        mErrorTextView = view.findViewById(R.id.error_text);
 
         if (savedInstanceState != null && savedInstanceState.containsKey(TRACK_LIST)) {
             mTrackList = savedInstanceState.getParcelableArrayList(TRACK_LIST);
@@ -150,29 +151,26 @@ public class TrackListFragment extends Fragment implements
      */
     private void setupServiceReceiver() {
         trackReceiver = new TrackReceiver(new Handler());
-        trackReceiver.setReceiver(new TrackReceiver.Receiver(){
-            @Override
-            public void onReceiveResult(int resultCode, Bundle resultData) {
-                if (resultCode == Activity.RESULT_OK) {
-                    mErrorTextView.setVisibility(View.INVISIBLE);
+        trackReceiver.setReceiver((resultCode, resultData) -> {
+            if (resultCode == Activity.RESULT_OK) {
+                mErrorTextView.setVisibility(View.INVISIBLE);
 
-                    mTrackList = resultData.getParcelableArrayList(RESULT_VALUE);
+                mTrackList = resultData.getParcelableArrayList(RESULT_VALUE);
 
-                    if (mTrackList != null && mTrackList.size() > 0) {
-                        //Log.w("setupSR", "Successfully acquired ArrayList of tracks: " + String.valueOf(mTrackList.size()));
-                        setupAdapter();
-                    }
-                } else if (resultCode == Activity.RESULT_FIRST_USER) {
-                    // no results found
-                    //Log.w("setupSR", "No Results Found");
-                    mErrorTextView.setVisibility(View.VISIBLE);
-                    mErrorTextView.setText(getResources().getText(R.string.error_results));
-                } else if (resultCode == Activity.RESULT_CANCELED) {
-                    // not connected
-                    //Log.w("setupSR", "Device Not Connected");
-                    mErrorTextView.setVisibility(View.VISIBLE);
-                    mErrorTextView.setText(getResources().getText(R.string.error_connection));
+                if (mTrackList != null && mTrackList.size() > 0) {
+                    //Log.w("setupSR", "Successfully acquired ArrayList of tracks: " + String.valueOf(mTrackList.size()));
+                    setupAdapter();
                 }
+            } else if (resultCode == Activity.RESULT_FIRST_USER) {
+                // no results found
+                //Log.w("setupSR", "No Results Found");
+                mErrorTextView.setVisibility(View.VISIBLE);
+                mErrorTextView.setText(getResources().getText(R.string.error_results));
+            } else if (resultCode == Activity.RESULT_CANCELED) {
+                // not connected
+                //Log.w("setupSR", "Device Not Connected");
+                mErrorTextView.setVisibility(View.VISIBLE);
+                mErrorTextView.setText(getResources().getText(R.string.error_connection));
             }
         });
     }
@@ -183,65 +181,52 @@ public class TrackListFragment extends Fragment implements
      */
     private void setupAdapter() {
         adapter = new TrackAdapter(getActivity(), mTrackList);
-        adapter.setOnItemClickListener(new TrackAdapter.ClickListener() {
 
-            /**
-             * Individual RecyclerView item selected
-             * @param position : item selected index
-             * @param v        : view contained within the RecyclerView List
-             */
-            @Override
-            public void onItemClick(int position, View v) {
-                Track track = mTrackList.get(position);
-                ((Callback) getActivity()).onItemSelected(track, v);
-            }
+        // Individual RecyclerView item selected
+        adapter.setOnItemClickListener((position, view) -> {
+            Track track = mTrackList.get(position);
+            ((Callback) getActivity()).onItemSelected(track, view);
         });
         mRecyclerView.setAdapter(adapter);
     }
 
+    // TODO - Consider Consolidation (?)
+
     private void setupPlaylistAdapter() {
         mAdapter = new PlaylistAdapter(getActivity());
-        mAdapter.setOnItemClickListener(new PlaylistAdapter.ClickListener() {
 
-            /**
-             * Individual RecyclerView Playlist item selected
-             * @param track : track object for use within DetailTrack
-             * @param v     : view contained within RecylcerView List
-             */
-            @Override
-            public void onItemClick(Track track, View v) {
-                // Delete button pressed
-                // Delete from ContentProvider + restartLoader
-                if (v instanceof ImageView) {
-                    Uri uri = TrackContract.TrackEntry.CONTENT_URI;
-                    String selection = TrackContract.TrackEntry.COLUMN_ARTiST
-                        + "=? AND "
-                        + TrackContract.TrackEntry.COLUMN_ALBUM
-                        + "=? AND "
-                        + TrackContract.TrackEntry.COLUMN_TRACK
-                        + "=?";
+        // Individual RecyclerView Playlist item selected
+        mAdapter.setOnItemClickListener((track, view) -> {
+            // Delete button pressed: Delete from ContentProvider + restartLoader
+            if (view instanceof ImageView) {
+                Uri uri = TrackContract.TrackEntry.CONTENT_URI;
+                String selection = TrackContract.TrackEntry.COLUMN_ARTiST
+                    + "=? AND "
+                    + TrackContract.TrackEntry.COLUMN_ALBUM
+                    + "=? AND "
+                    + TrackContract.TrackEntry.COLUMN_TRACK
+                    + "=?";
 
-                    // TODO - Background Thread
-                    getActivity().getContentResolver().delete(uri,
-                        selection,
-                        new String[]{
-                            track.getArtist(),
-                            track.getAlbum(),
-                            track.getTrackName()
-                        }
-                    );
+                // TODO - Background Thread
+                getActivity().getContentResolver().delete(uri,
+                    selection,
+                    new String[]{
+                        track.getArtist(),
+                        track.getAlbum(),
+                        track.getTrackName()
+                    }
+                );
 
-                    onResume();
-                } else {
-                    ((Callback) getActivity()).onItemSelected(track, v);
-                }
+                onResume();
+            } else {
+                ((Callback) getActivity()).onItemSelected(track, view);
             }
         });
         mRecyclerView.setAdapter(mAdapter);
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         if (mTrackList != null) {
             outState.putParcelableArrayList(TRACK_LIST, mTrackList);
         }

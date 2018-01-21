@@ -92,5 +92,5 @@
         android:src="@drawable/ic_add"
         android:contentDescription="@string/action_add"
         style="@style/DetailFAB"
-        app:backgroundTint="@color/MaterialLightGreen500"/>
+        app:backgroundTint="@color/MaterialLightGreen500" />
 </RelativeLayout>

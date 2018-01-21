@@ -60,7 +60,6 @@ public class TrackProvider extends ContentProvider {
      */
     @Override
     public Cursor query(@NonNull Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-        //Log.w(LOG_TAG, "Query Entries");
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
         builder.setTables(TrackContract.TrackEntry.TABLE_NAME);
 
@@ -121,12 +120,12 @@ public class TrackProvider extends ContentProvider {
             values
         );
 
-        // is record stored?
-        if (id > 0) {
-            return ContentUris.withAppendedId(uri, id);
+        // Check for insertion failure
+        if (id == 0) {
+            throw new SQLException("Error inserting into table: " + TrackContract.TrackEntry.TABLE_NAME);
         }
 
-        throw new SQLException("Error inserting into table: " + TrackContract.TrackEntry.TABLE_NAME);
+        return ContentUris.withAppendedId(uri, id);
     }
 
     /**

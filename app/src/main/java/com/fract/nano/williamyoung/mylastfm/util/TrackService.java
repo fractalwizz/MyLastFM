@@ -8,7 +8,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.os.ResultReceiver;
+import android.os.ResultReceiver;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -26,6 +26,7 @@ import java.util.ArrayList;
 /**
  * Handles acquiring JSON data from Last.FM API
  */
+// TODO - Move away from LastFM
 public class TrackService extends IntentService {
     private final String LOG_TAG = TrackService.class.getSimpleName();
 

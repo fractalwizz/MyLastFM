@@ -52,8 +52,7 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.TrackV
     public TrackViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.list_track_item, viewGroup, false);
 
-        TrackViewHolder viewHolder = new TrackViewHolder(view);
-        return viewHolder;
+        return new TrackViewHolder(view);
     }
 
     @Override
@@ -75,9 +74,7 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.TrackV
     public void setOnItemClickListener(ClickListener listener) { this.mListener = listener; }
 
     @Override
-    public int getItemCount() {
-        return (null != mCursor) ? mCursor.getCount() : 0;
-    }
+    public int getItemCount() { return (null != mCursor) ? mCursor.getCount() : 0; }
 
     public void swapCursor(Cursor newCursor) {
         mCursor = newCursor;
@@ -92,6 +89,8 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.TrackV
         void onItemClick(Track track, View v);
     }
 
+    // TODO - Utilize ButterKnife
+    // TODO - Consider Separate class + Reuse
     public class TrackViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         protected ImageView imageView;
         protected TextView trackTextView;
@@ -100,10 +99,10 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.TrackV
 
         public TrackViewHolder(View view) {
             super(view);
-            this.imageView = (ImageView) view.findViewById(R.id.imageView);
-            this.trackTextView = (TextView) view.findViewById(R.id.trackText);
-            this.artistTextView = (TextView) view.findViewById(R.id.artistText);
-            this.deleteButton = (ImageView) view.findViewById(R.id.deleteButton);
+            this.imageView = view.findViewById(R.id.imageView);
+            this.trackTextView = view.findViewById(R.id.trackText);
+            this.artistTextView = view.findViewById(R.id.artistText);
+            this.deleteButton = view.findViewById(R.id.deleteButton);
             this.deleteButton.setVisibility(View.VISIBLE);
             this.deleteButton.setOnClickListener(this);
             view.setOnClickListener(this);

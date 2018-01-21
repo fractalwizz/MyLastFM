@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
+// TODO - Consider Data Reorganization
 public class Track implements Parcelable {
     private String artist;
     private String album;

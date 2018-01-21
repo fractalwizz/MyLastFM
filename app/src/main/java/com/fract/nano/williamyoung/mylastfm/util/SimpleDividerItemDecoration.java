@@ -13,6 +13,7 @@ import com.fract.nano.williamyoung.mylastfm.R;
 /**
  * RecyclerView Item Divider
  */
+// TODO - Use built-in Divider?
 public class SimpleDividerItemDecoration extends RecyclerView.ItemDecoration {
     private Drawable mDivider;
 

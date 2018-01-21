@@ -41,8 +41,7 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.TrackViewHol
     public TrackViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.list_track_item, viewGroup, false);
 
-        TrackViewHolder viewHolder = new TrackViewHolder(view);
-        return viewHolder;
+        return new TrackViewHolder(view);
     }
 
     @Override
@@ -64,9 +63,7 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.TrackViewHol
     public void setOnItemClickListener(ClickListener listener) { this.listener = listener; }
 
     @Override
-    public int getItemCount() {
-        return (null != mTrackList) ? mTrackList.size() : 0;
-    }
+    public int getItemCount() { return (null != mTrackList) ? mTrackList.size() : 0; }
 
     /**
      * Used within TrackListFragment
@@ -76,18 +73,20 @@ public class TrackAdapter extends RecyclerView.Adapter<TrackAdapter.TrackViewHol
         void onItemClick(int position, View v);
     }
 
+    // TODO - Utilize ButterKnife
+    // TODO - Consider separate class + Reuse
     public class TrackViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        protected ImageView imageView;
-        protected TextView trackTextView;
-        protected TextView artistTextView;
-        protected ImageView deleteButton;
+        ImageView imageView;
+        TextView trackTextView;
+        TextView artistTextView;
+        ImageView deleteButton;
 
-        public TrackViewHolder(View view) {
+        TrackViewHolder(View view) {
             super(view);
-            this.imageView = (ImageView) view.findViewById(R.id.imageView);
-            this.trackTextView = (TextView) view.findViewById(R.id.trackText);
-            this.artistTextView = (TextView) view.findViewById(R.id.artistText);
-            this.deleteButton = (ImageView) view.findViewById(R.id.deleteButton);
+            imageView = view.findViewById(R.id.imageView);
+            trackTextView = view.findViewById(R.id.trackText);
+            artistTextView = view.findViewById(R.id.artistText);
+            deleteButton = view.findViewById(R.id.deleteButton);
             view.setOnClickListener(this);
         }
 

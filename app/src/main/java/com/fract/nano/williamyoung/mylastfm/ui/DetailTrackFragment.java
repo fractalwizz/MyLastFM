@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -57,7 +58,7 @@ public class DetailTrackFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_detail_track, container, false);
 
         if (savedInstanceState != null && savedInstanceState.containsKey(SINGLE_TRACK)) {
@@ -75,16 +76,13 @@ public class DetailTrackFragment extends Fragment {
      */
     private void setupServiceReceiver() {
         trackReceiver = new TrackReceiver(new Handler());
-        trackReceiver.setReceiver(new TrackReceiver.Receiver() {
-            @Override
-            public void onReceiveResult(int resultCode, Bundle resultData) {
-                if (resultCode == Activity.RESULT_OK) {
-                    mTrack = resultData.getParcelable(RESULT_VALUE);
-                    updateViews();
-                } else if (resultCode == Activity.RESULT_CANCELED) {
-                    //Log.w("detailSR", "Device Not Connected");
-                    Snackbar.make(rootView, getString(R.string.detail_disconnected), Snackbar.LENGTH_LONG).show();
-                }
+        trackReceiver.setReceiver((resultCode, resultData) -> {
+            if (resultCode == Activity.RESULT_OK) {
+                mTrack = resultData.getParcelable(RESULT_VALUE);
+                updateViews();
+            } else if (resultCode == Activity.RESULT_CANCELED) {
+                //Log.w("detailSR", "Device Not Connected");
+                Snackbar.make(rootView, getString(R.string.detail_disconnected), Snackbar.LENGTH_LONG).show();
             }
         });
     }
@@ -92,11 +90,12 @@ public class DetailTrackFragment extends Fragment {
     /**
      * Fills layout views with Track data
      */
+    // TODO - Utilize ButterKnife (?)
     private void updateViews() {
         int iS = getResources().getInteger(R.integer.image_size);
 
-        Button mBandButton = (Button) rootView.findViewById(R.id.band_url_button);
-        final FloatingActionButton mFab = (FloatingActionButton) rootView.findViewById(R.id.add_fab);
+        Button mBandButton = rootView.findViewById(R.id.band_url_button);
+        final FloatingActionButton mFab = rootView.findViewById(R.id.add_fab);
 
         // two-pane mode and fragment without track
         if (mTrack == null) {
@@ -105,7 +104,7 @@ public class DetailTrackFragment extends Fragment {
             return;
         }
 
-        ImageView mTrackImageView = (ImageView) rootView.findViewById(R.id.track_image_view);
+        ImageView mTrackImageView = rootView.findViewById(R.id.track_image_view);
         Picasso.with(getActivity())
             .load(mTrack.getImage())
             .error(R.drawable.error)
@@ -114,7 +113,7 @@ public class DetailTrackFragment extends Fragment {
             .into(mTrackImageView);
         mTrackImageView.setContentDescription(mTrack.getTrackName());
 
-        ImageView mTrackCoverView = (ImageView) rootView.findViewById(R.id.track_cover_view);
+        ImageView mTrackCoverView = rootView.findViewById(R.id.track_cover_view);
         if (!mTrack.getAlbumCover().equals("")) {
             Picasso.with(getActivity())
                 .load(mTrack.getAlbumCover())
@@ -125,83 +124,75 @@ public class DetailTrackFragment extends Fragment {
             mTrackCoverView.setContentDescription(mTrack.getAlbum());
         }
 
-        TextView mTrackTextView = (TextView) rootView.findViewById(R.id.track_name_text);
+        TextView mTrackTextView = rootView.findViewById(R.id.track_name_text);
         mTrackTextView.setText(mTrack.getTrackName());
 
-        TextView mDurationTextView = (TextView) rootView.findViewById(R.id.track_duration_text);
+        TextView mDurationTextView = rootView.findViewById(R.id.track_duration_text);
         mDurationTextView.setText(mTrack.getFormattedLength());
 
-        TextView mArtistTextView = (TextView) rootView.findViewById(R.id.detail_text_artist);
+        TextView mArtistTextView = rootView.findViewById(R.id.detail_text_artist);
         mArtistTextView.setText(String.format(getString(R.string.format_artist), mTrack.getArtist()));
 
-        TextView mAlbumTextView = (TextView) rootView.findViewById(R.id.detail_text_album);
+        TextView mAlbumTextView = rootView.findViewById(R.id.detail_text_album);
         mAlbumTextView.setText(String.format(getString(R.string.format_album), mTrack.getAlbum()));
 
         mBandButton.setVisibility(View.VISIBLE);
-        mBandButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Uri url = Uri.parse(mTrack.getBandUrl());
-                Intent intent = new Intent(Intent.ACTION_VIEW, url);
-
-                startActivity(intent);
-            }
+        mBandButton.setOnClickListener(v -> {
+            Uri url = Uri.parse(mTrack.getBandUrl());
+            DetailTrackFragment.this.startActivity(new Intent(Intent.ACTION_VIEW, url));
         });
 
         mFab.setVisibility(View.VISIBLE);
-        mFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (toAdd) {
-                    ContentValues values = new ContentValues();
+        mFab.setOnClickListener(v -> {
+            if (toAdd) {
+                ContentValues values = new ContentValues();
 
-                    values.clear();
+                values.clear();
 
-                    values.put(TrackContract.TrackEntry.COLUMN_ARTiST, mTrack.getArtist());
-                    values.put(TrackContract.TrackEntry.COLUMN_ALBUM, mTrack.getAlbum());
-                    values.put(TrackContract.TrackEntry.COLUMN_TRACK, mTrack.getTrackName());
-                    values.put(TrackContract.TrackEntry.COLUMN_DURATION, mTrack.getLength());
-                    values.put(TrackContract.TrackEntry.COLUMN_IMAGE, mTrack.getImage());
-                    values.put(TrackContract.TrackEntry.COLUMN_COVER, mTrack.getAlbumCover());
-                    values.put(TrackContract.TrackEntry.COLUMN_URL, mTrack.getBandUrl());
+                values.put(TrackContract.TrackEntry.COLUMN_ARTiST, mTrack.getArtist());
+                values.put(TrackContract.TrackEntry.COLUMN_ALBUM, mTrack.getAlbum());
+                values.put(TrackContract.TrackEntry.COLUMN_TRACK, mTrack.getTrackName());
+                values.put(TrackContract.TrackEntry.COLUMN_DURATION, mTrack.getLength());
+                values.put(TrackContract.TrackEntry.COLUMN_IMAGE, mTrack.getImage());
+                values.put(TrackContract.TrackEntry.COLUMN_COVER, mTrack.getAlbumCover());
+                values.put(TrackContract.TrackEntry.COLUMN_URL, mTrack.getBandUrl());
 
-                    Uri uri = TrackContract.TrackEntry.CONTENT_URI;
-                    getActivity().getContentResolver().insert(uri, values);
+                Uri uri = TrackContract.TrackEntry.CONTENT_URI;
+                getActivity().getContentResolver().insert(uri, values);
 
-                    updateWidgets();
+                updateWidgets();
 
-                    // Change FAB
-                    mFab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_remove));
-                    mFab.setBackgroundTintList(ResourcesCompat.getColorStateList(getResources(), R.color.MaterialRed500, getActivity().getTheme()));
+                // Change FAB
+                mFab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_remove));
+                mFab.setBackgroundTintList(ResourcesCompat.getColorStateList(getResources(), R.color.MaterialRed500, getActivity().getTheme()));
 
-                    toAdd = false;
-                } else {
-                    Uri uri = TrackContract.TrackEntry.CONTENT_URI;
-                    String selection = TrackContract.TrackEntry.COLUMN_ARTiST
-                        + "=? AND "
-                        + TrackContract.TrackEntry.COLUMN_ALBUM
-                        + "=? AND "
-                        + TrackContract.TrackEntry.COLUMN_TRACK
-                        + "=?";
+                toAdd = false;
+            } else {
+                Uri uri = TrackContract.TrackEntry.CONTENT_URI;
+                String selection = TrackContract.TrackEntry.COLUMN_ARTiST
+                    + "=? AND "
+                    + TrackContract.TrackEntry.COLUMN_ALBUM
+                    + "=? AND "
+                    + TrackContract.TrackEntry.COLUMN_TRACK
+                    + "=?";
 
-                    // TODO - Background Thread
-                    getActivity().getContentResolver().delete(uri,
-                        selection,
-                        new String[]{
-                            mTrack.getArtist(),
-                            mTrack.getAlbum(),
-                            mTrack.getTrackName()
-                        }
-                    );
+                // TODO - Background Thread
+                getActivity().getContentResolver().delete(uri,
+                    selection,
+                    new String[]{
+                        mTrack.getArtist(),
+                        mTrack.getAlbum(),
+                        mTrack.getTrackName()
+                    }
+                );
 
-                    updateWidgets();
+                updateWidgets();
 
-                    // Change FAB back
-                    mFab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_add));
-                    mFab.setBackgroundTintList(ResourcesCompat.getColorStateList(getResources(), R.color.MaterialLightGreen500, getActivity().getTheme()));
+                // Change FAB back
+                mFab.setImageDrawable(ContextCompat.getDrawable(getContext(), R.drawable.ic_add));
+                mFab.setBackgroundTintList(ResourcesCompat.getColorStateList(getResources(), R.color.MaterialLightGreen500, getActivity().getTheme()));
 
-                    toAdd = true;
-                }
+                toAdd = true;
             }
         });
 
@@ -233,9 +224,6 @@ public class DetailTrackFragment extends Fragment {
 
             testTrack.close();
         }
-//        } else {
-//            Log.w("DetailTF", "notToAdd");
-//        }
     }
 
     /**
@@ -249,7 +237,7 @@ public class DetailTrackFragment extends Fragment {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putParcelable(SINGLE_TRACK, mTrack);
         super.onSaveInstanceState(outState);
     }

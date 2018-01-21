@@ -4,7 +4,7 @@
     android:layout_height="@dimen/list_item_height"
     android:background="?android:attr/selectableItemBackground"
     android:paddingTop="@dimen/list_item_padding"
-    android:paddingBottom="@dimen/list_item_padding">
+    android:paddingBottom="@dimen/list_item_padding" >
 
     <ImageView
         android:id="@+id/imageView"
@@ -14,7 +14,7 @@
         android:layout_centerVertical="true"
         android:paddingStart="@dimen/zero"
         android:paddingEnd="@dimen/image_end_padding"
-        android:contentDescription="@string/empty"/>
+        android:contentDescription="@string/empty" />
 
     <LinearLayout
         android:id="@+id/linear_list"
@@ -23,7 +23,7 @@
         android:layout_marginEnd="@dimen/item_track_margin"
         android:layout_centerVertical="true"
         android:layout_toEndOf="@id/imageView"
-        android:orientation="vertical">
+        android:orientation="vertical" >
 
         <TextView
             android:id="@+id/trackText"

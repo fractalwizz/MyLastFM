@@ -95,9 +95,7 @@ public class TrackWidgetIntentService extends IntentService {
                     Bitmap bitmap = Picasso.with(getApplicationContext()).load(cover).get();
                     views.setImageViewBitmap(R.id.widget_cover, bitmap);
 
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1) {
-                        views.setContentDescription(R.id.widget_cover, coverDesc);
-                    }
+                    views.setContentDescription(R.id.widget_cover, coverDesc);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

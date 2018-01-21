@@ -8,7 +8,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.os.ResultReceiver;
+import android.os.ResultReceiver;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,8 +21,9 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+// TODO - Move away from LastFM
 public class DetailService extends IntentService {
-    private final String LOG_TAG = DetailService.class.getSimpleName();
+    //private final String LOG_TAG = DetailService.class.getSimpleName();
 
     public static final String RECEIVER = "com.fract.nano.williamyoung.mylastfm.extra.RECEIVER";
     public static final String TRACK_OBJ = "com.fract.nano.williamyoung.mylastfm.extra.TRACK_OBJ";
